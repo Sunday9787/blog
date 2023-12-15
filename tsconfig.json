@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "node",
+    "baseUrl": ".",
+    "lib": ["DOM","DOM.Iterable", "ESNext"]
+  },
+  "include": ["*.config.ts", "src/.vuepress/*.ts", "src/.vuepress/*.vue"]
+}
