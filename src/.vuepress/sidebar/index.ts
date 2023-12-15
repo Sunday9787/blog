@@ -10,6 +10,13 @@ export default sidebar({
       children: "structure",
     },
     {
+      text: "Typescript",
+      icon: "code",
+      collapsible: true,
+      prefix: "typescript",
+      children: "structure",
+    },
+    {
       text: "Web 安全",
       icon: "shield-halved",
       collapsible: true,
