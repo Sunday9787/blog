@@ -36,6 +36,17 @@ export default defineUserConfig({
       components: {
         components: ["VPCard", "VPBanner", "Badge", "CodePen", "SiteInfo"],
       },
+      comment: {
+        provider: 'Giscus',
+        repo:"Sunday9787/sunday90.com",
+        repoId:"R_kgDOJI8Lww",
+        category:"Announcements",
+        categoryId:"DIC_kwDOJI8Lw84Cb2De",
+        mapping:"pathname",
+        strict: false,
+        reactionsEnabled: true,
+        inputPosition:"bottom",
+      },
       blog: {
         filter(item) {
           return item.slug !== "README";
