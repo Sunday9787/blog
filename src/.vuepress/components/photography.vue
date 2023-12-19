@@ -1,7 +1,13 @@
 <template>
-  <ol class="photography" :style="{ columnCount: column }">
+  <ol class="photography">
     <li v-for="(item, k) in data" :key="k" class="photography-item">
-      <img :src="item.thumbnail" :alt="item.title" class="photography-item-media" />
+      <picture>
+        <img
+          :src="item.photo"
+          :alt="item.title"
+          loading="lazy"
+          class="photography-item-media" />
+      </picture>
 
       <div class="photography-item-mask" />
       <div class="photography-item-title">{{ item.title }}</div>
@@ -23,7 +29,7 @@ interface Photography {
 }
 
 interface Props {
-  column: number;
+  column?: number;
   data: Photography[];
 }
 
@@ -36,6 +42,7 @@ withDefaults(defineProps<Props>(), { column: 4 });
   column-width: auto;
   column-gap: 5px;
   list-style: none;
+  // column-count: 4;
   padding: 0;
 }
 
@@ -111,5 +118,29 @@ withDefaults(defineProps<Props>(), { column: 4 });
   transition: all 0.3s ease-in-out;
   pointer-events: none;
   z-index: 10;
+}
+
+@media screen and (min-width: 350px) and (max-width: 680px) {
+  .photography {
+    column-count: 1;
+  }
+}
+
+@media screen and (min-width: 681px) and (max-width: 997px) {
+  .photography {
+    column-count: 3;
+  }
+}
+
+@media screen and (min-width: 998px) and (max-width: 1250px) {
+  .photography {
+    column-count: 3;
+  }
+}
+
+@media screen and (min-width: 1250px) {
+  .photography {
+    column-count: 4;
+  }
 }
 </style>

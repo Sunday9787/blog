@@ -121,7 +121,7 @@ test.say({ name: '机车靓仔', job: '摄影师', age: 23 })
 
 ![复杂一点的装饰器](https://static-1256180570.cos.ap-nanjing.myqcloud.com/image/2023-12-16-01-04-01-202312160104300.png?imageMogr2/interlace/1/quality/100)
 
-### 结语
+## 结语
 
 ts 这次的装饰器更新 太棒了， 之前的 装饰器类型 太差劲了 无法做到类型推导 大量的 any 类型定义，体验差 无法做到自动推导
 
