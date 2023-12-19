@@ -128,7 +128,7 @@ withDefaults(defineProps<Props>(), { column: 4 });
 
 @media screen and (min-width: 681px) and (max-width: 997px) {
   .photography {
-    column-count: 3;
+    column-count: 2;
   }
 }
 

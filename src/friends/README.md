@@ -17,3 +17,11 @@ sidebar: false
   "preview": "https://static-1256180570.cos.ap-nanjing.myqcloud.com/image/2023-12-13-20231213113507.png"
 }
 ```
+
+```component site-info
+{
+  "name": "红发",
+  "url": "https://www.xlcool.cn/",
+  "preview": "https://static-1256180570.cos.ap-nanjing.myqcloud.com/image/2023-12-19-01-19205647.jpg"
+}
+```

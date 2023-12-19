@@ -12,7 +12,12 @@ export default defineUserConfig({
   title: "机车靓仔的博客",
   port: 7077,
   public: path.join(process.cwd(), "public"),
-  dest: path.join(process.cwd(), 'dist'),
+  dest: path.join(process.cwd(), "dist"),
+  head: [
+    ["link", { rel: "shortcut icon", href: "https://static-1256180570.cos.ap-nanjing.myqcloud.com/favicon.ico" }],
+    ["meta", { name: "apple-mobile-web-app-capable", content: "yes" }],
+    ["meta", { name: "apple-mobile-web-app-status-bar-style", content: "black" }],
+  ],
   pagePatterns: ["**/*.md", "!**/*.snippet.md", "!.vuepress", "!node_modules"],
   theme: hopeTheme({
     iconAssets: "fontawesome",
@@ -23,8 +28,7 @@ export default defineUserConfig({
     sidebar,
     blog: {
       roundAvatar: true,
-      avatar:
-        "https://static-1256180570.cos.ap-nanjing.myqcloud.com/image/2023-03-08-21-23-17-Yamaha-motorcycle-racing_1920x1200.jpg",
+      avatar: "https://static-1256180570.cos.ap-nanjing.myqcloud.com/image/20500528.jpg",
       name: "机车靓仔",
       description: "群居不倚 独立不惧",
       medias: {
@@ -37,15 +41,15 @@ export default defineUserConfig({
         components: ["VPCard", "VPBanner", "Badge", "CodePen", "SiteInfo"],
       },
       comment: {
-        provider: 'Giscus',
-        repo:"Sunday9787/sunday90.com",
-        repoId:"R_kgDOJI8Lww",
-        category:"Announcements",
-        categoryId:"DIC_kwDOJI8Lw84Cb2De",
-        mapping:"pathname",
+        provider: "Giscus",
+        repo: "Sunday9787/sunday90.com",
+        repoId: "R_kgDOJI8Lww",
+        category: "Announcements",
+        categoryId: "DIC_kwDOJI8Lw84Cb2De",
+        mapping: "pathname",
         strict: false,
         reactionsEnabled: true,
-        inputPosition:"bottom",
+        inputPosition: "bottom",
       },
       blog: {
         filter(item) {
@@ -61,7 +65,7 @@ export default defineUserConfig({
         include: true,
         vuePlayground: true,
         playground: {
-          presets: ['ts','vue','unocss'],
+          presets: ["ts", "vue", "unocss"],
         },
         component: true,
         demo: true,
