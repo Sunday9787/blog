@@ -1,5 +1,5 @@
 ---
-title: 模板编辑器：控件的控制
+title: 模板编辑器：控制
 date: 2024-10-29 15:00:00
 category: [Vue]
 description: 实现一个模板编辑器 - 控件的控制

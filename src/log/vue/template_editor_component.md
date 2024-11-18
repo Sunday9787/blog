@@ -1,5 +1,5 @@
 ---
-title: 模板编辑器：组件的设计与实现
+title: 模板编辑器：组件
 date: 2024-10-28 14:00:00
 category: [Vue]
 description: 实现一个模板编辑器 - 组件

@@ -309,6 +309,6 @@ toHtml() {
 
 ## 最后
 
-希望你能看懂为何要如此实现。
+希望你能看懂为何要如此实现，这样你就能跟我一样强了。
 
 ![51bfb58e31bacf81](https://static-1256180570.cos.ap-nanjing.myqcloud.com/image/1731835375.jpg)
