@@ -197,11 +197,11 @@ export default {
 
 ### 拖拉
 
-参考编辑器(正在抓紧更新中...)
+[参考编辑器](./template_editor.html#拖拉)
 
 ### 缩放
 
-参考编辑器(正在抓紧更新中...)
+[参考编辑器](./template_editor.html#缩放)
 
 ### 添加&删除控件
 
