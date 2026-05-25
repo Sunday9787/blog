@@ -1,4 +1,5 @@
 name: Build and Deploy
+
 on:
   push:
     branches:
@@ -15,24 +16,29 @@ jobs:
       - name: Setup PNPM
         uses: pnpm/action-setup@v2
         with:
-          version: 8.10.0
-          run_install: true
+          version: 11.10.1
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22.22.1
+          registry-url: https://registry.npmjs.org
           cache: pnpm
 
-      - name: Setup Build doc
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build
         run: pnpm run doc:build
 
-      - name: Setup Deploy
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          repository-name: Sunday9787/sunday90.com
-          branch: master
-          folder: dist
-          token: ${{ secrets.ACCESS_TOKEN }}
-          single-commit: true
-          clean: true
+      - name: Deploy
+        env:
+          DEPLOY_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        run: |
+          cd dist
+          git init
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "deploy $(date +'%Y-%m-%d %H:%M:%S')"
+          git push --force https://x-access-token:${DEPLOY_TOKEN}@github.com/Sunday9787/sunday90.com master
