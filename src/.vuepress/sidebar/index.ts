@@ -51,5 +51,17 @@ export default sidebar({
       prefix: "webpack",
       children: "structure",
     },
+    {
+      text: "Devops",
+      collapsible: true,
+      icon: "tools",
+      prefix: "devops",
+      children: [
+        {
+          text: "阿里云 Pipeline 构建失败",
+          link: "/log/devops/aliyun-pipeline-pnpm-build-failure.md",
+        }
+      ]
+    }
   ],
 });
