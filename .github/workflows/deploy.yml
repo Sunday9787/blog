@@ -35,3 +35,4 @@ jobs:
           folder: dist
           token: ${{ secrets.ACCESS_TOKEN }}
           single-commit: true
+          clean: true
