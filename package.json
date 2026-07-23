@@ -8,20 +8,19 @@
   ],
   "author": "机车靓仔",
   "license": "ISC",
+  "type": "module",
+  "packageManager": "pnpm@11.5.3",
+  "volta": {
+    "node": "22.23.1",
+    "pnpm": "11.5.3"
+  },
   "scripts": {
-    "doc:dev": "vuepress dev src",
-    "doc:build": "vuepress build src"
+    "doc:dev": "vitepress dev .",
+    "doc:build": "vitepress build .",
+    "doc:preview": "vitepress preview ."
   },
   "devDependencies": {
-    "@vue/repl": "^3.0.0",
-    "@vuepress/client": "2.0.0-rc.0",
-    "@vuepress/plugin-register-components": "2.0.0-rc.0",
-    "@vuepress/utils": "2.0.0-rc.0",
-    "echarts": "^5.4.3",
-    "flowchart.ts": "^2.0.0",
-    "vue": "^3.3.10",
-    "vuepress": "2.0.0-rc.0",
-    "vuepress-plugin-search-pro": "2.0.0-rc.3",
-    "vuepress-theme-hope": "2.0.0-rc.2"
+    "vitepress": "^1.6.4",
+    "vitepress-theme-teek": "^1.6.0"
   }
 }

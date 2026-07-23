@@ -3,9 +3,9 @@
     "target": "ESNext",
     "module": "ESNext",
     "allowSyntheticDefaultImports": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "baseUrl": ".",
     "lib": ["DOM","DOM.Iterable", "ESNext"]
   },
-  "include": ["*.config.ts", "src/.vuepress/*.ts", "src/.vuepress/*.vue"]
+  "include": [".vitepress/**/*.ts",".vitepress/**/*.vue"]
 }

@@ -1,0 +1,626 @@
+---
+title: 填字游戏
+date: 2018-04-01
+categories: [JavaScript]
+tags: [pixijs, canvas, 小游戏]
+---
+
+起初是公司一个小游戏，从立项到开发完成大概5天吧，因为时间有些赶，最开始写的并不是很好，画字格用的是 table。
+UI上面小小出入，跟一个朋友说做这个项目后，朋友建议我用 [pixijs](https://www.pixijs.com)，利用闲暇时间重写了一遍，下面是源码
+
+<!-- more -->
+
+## HTML
+
+```html
+<p class="time-container"><time id="time">00:00</time></p>
+<div class="game-container">
+  <canvas id="game" width="500" height="500"></canvas>
+  <div class="mask">初始化中...</div>
+</div>
+<div class="tips-container">
+  <p class="fl">提示：</p>
+  <p id="tips" class="oh">赫拉利将告诉你人类是如何从动物变成上帝</p>
+</div>
+<div class="input-container">
+  <input type="text" class="game-input" id="game-input" />
+  <a href="javascript:;" class="game-input-send">确认</a>
+</div>
+```
+
+## JavaScript
+
+```js
+require(["zepto", "pixi", "modal"], function($, pixi, modal) {
+  // 游戏基础配置
+  modal.pupup({
+    content: `
+      <!-- <img src="http://sunday90.cn/upload/2500872220b52768dd9c4e237579f8bc.jpg" /> -->
+      <a href="javascript:;" class="btn start-btn">开始计时</a>
+    `,
+    mask: true,
+    success: function(layero) {
+      const that = this;
+      $(layero).on("click", ".start-btn", function(e) {
+        console.log(this);
+        console.log("开始游戏");
+        let time = document.querySelector("#time");
+        Countdown.start(0.2, time, function(time) {
+          console.log(time);
+        });
+        that.close();
+      });
+    }
+  });
+
+  const ua = window.navigator.userAgent.toLocaleLowerCase();
+  const device = {
+    ios: /iphone/g.test(ua),
+    android: /android/g.test(ua)
+  };
+
+  const unit_size = { width: 50, height: 50 };
+  const table = { x: 10, y: 10 };
+  const gameContainer = document.querySelector(".game-container");
+  const mask = document.querySelector(".mask");
+  const input = document.querySelector("#game-input");
+  const tipsEl = document.querySelector("#tips");
+  const fontStyle = new PIXI.TextStyle({
+    fontFamily:
+      '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif',
+    fontSize: 28,
+    fontWeight: "500",
+    fill: ["#333"] // gradient
+  });
+  const time = document.querySelector("#time");
+  // 需要渲染的方格二维数组
+  const unit_data = [
+    [
+      { y: 0, x: 1 },
+      { y: 0, x: 5 },
+      { y: 0, x: 6 },
+      { y: 0, x: 7 },
+      { y: 0, x: 8 }
+    ],
+    [
+      { y: 1, x: 1 },
+      { y: 1, x: 3 },
+      { y: 1, x: 8 }
+    ],
+    [
+      { y: 2, x: 1 },
+      { y: 2, x: 2 },
+      { y: 2, x: 3 },
+      { y: 2, x: 4 },
+      { y: 2, x: 6 },
+      { y: 2, x: 7 },
+      { y: 2, x: 8 }
+    ],
+    [
+      { y: 3, x: 3 },
+      { y: 3, x: 7 }
+    ],
+    [
+      { y: 4, x: 0 },
+      { y: 4, x: 1 },
+      { y: 4, x: 2 },
+      { y: 4, x: 3 },
+      { y: 4, x: 6 },
+      { y: 4, x: 7 },
+      { y: 4, x: 8 },
+      { y: 4, x: 9 }
+    ],
+    [
+      { y: 5, x: 1 },
+      { y: 5, x: 7 }
+    ],
+    [
+      { y: 6, x: 1 },
+      { y: 6, x: 4 },
+      { y: 6, x: 5 },
+      { y: 6, x: 6 },
+      { y: 6, x: 7 }
+    ],
+    [
+      { y: 7, x: 1 },
+      { y: 7, x: 4 }
+    ],
+    [
+      { y: 8, x: 1 },
+      { y: 8, x: 2 },
+      { y: 8, x: 3 },
+      { y: 8, x: 4 }
+    ],
+    [
+      { y: 9, x: 0 },
+      { y: 9, x: 1 }
+    ]
+  ];
+
+  // tips
+  const tips = {
+    "21222324": "赫拉利将告诉你人类是如何从动物变成上帝",
+    "40414243": "对两次世界大战的哲学思考，直面存在的危机",
+    "81828384": "看萧红写的这书名还以为是一条河的历史",
+    "9091": "鲁迅先生的短篇小说集，里面有《狂人日记》",
+    "64656667": "天下合久必分，分久必合",
+    "46474849": "与达尔文《物种起源论》及哥白尼《天体运行论》并称为人类三大思想革命的经典之作",
+    "262728": "三位艺术天才的非凡人生，罗曼罗兰著",
+    "5678": "证明你上过中学的又一个有力佐证，冰心奶奶如是说",
+    "11121": "我们都是故事外的人——阿尔贝·加缪",
+    "13233343": "一种追求简单生活的价值观",
+    "415161718191": "余华手下一本关于记忆的长篇小说",
+    "647484": "走遍万水千山，泪尽撒哈拉",
+    "2737475767": "达康书记别低头，皇冠会掉",
+    "81828": "中国四大名著之一"
+  };
+
+  // 创建 12 * 8 的方格
+  const unit = []; // 所有单元格 二维数组
+  const unit_block = []; // 需要渲染的单元格
+  const selectUnit = { isRow: true, unit: [] }; // 选中后的单元格
+
+  // 创建材质
+  const unitTexture = PIXI.Texture.fromImage("./assets/images/unit.svg");
+  const unitBlockTexture = PIXI.Texture.fromImage(
+    "./assets/images/unit-block.svg"
+  );
+  const unitBlockActiveTexture = PIXI.Texture.fromImage(
+    "./assets/images/unit-block-active.svg"
+  );
+
+  // 创建舞台
+  const container = new PIXI.Container();
+  container.x = 0;
+  container.y = 0;
+
+  // 倒计时
+  const Countdown = {
+    down(callBack, success) {
+      clearInterval(this.Interval);
+      callBack(
+        success === true ? this.countTime * 60 - this.time / 1000 : "时间结束"
+      );
+    },
+    check(v) {
+      if (v < 10) {
+        return "0" + v;
+      } else {
+        return v;
+      }
+    },
+    start(time, el, callBack) {
+      this.countTime = time;
+      var endDate = new Date().getTime() + time * 60 * 1000;
+      this.Interval = setInterval(() => {
+        this.time = endDate - new Date().getTime();
+        if (this.time <= 0) this.down(callBack);
+        var m = parseInt((this.time / 1000 / 60) % 60, 10);
+        var s = parseInt((this.time / 1000) % 60, 10);
+        var ms = parseInt(this.time % 1000, 10);
+        el.innerText = this.check(m) + ":" + this.check(s);
+      }, 1);
+    }
+  };
+
+  // es7
+  setTimeout(() => {
+    initGame();
+  }, 300);
+
+  async function initGame() {
+    await (() => {
+      return new Promise((resolve, reject) => {
+        mask.classList.add("mask-in");
+        setTimeout(() => {
+          resolve();
+        }, 300);
+      });
+    })();
+
+    // 创建画布
+    const app = new PIXI.Application(
+      table.x * unit_size.width,
+      table.y * unit_size.height,
+      {
+        backgroundColor: 0xf1c16c,
+        antialias: true,
+        view: document.querySelector("#game"),
+        resolution: window.devicePixelRatio
+      }
+    );
+    app.stage.interactive = true;
+    app.stage.addChild(container);
+
+    // 绘制表格
+    creatTable(table, unit_data, async function() {
+      await (() => {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            mask.innerText = "初始化完成,祝您玩的开心";
+            resolve();
+          }, 1000);
+        });
+      })();
+
+      await setTimeout(() => {
+        mask.classList.add("mask-out");
+        console.log("初始化完成");
+      }, 500);
+    });
+  }
+
+  function creatTable(table, block, callBack) {
+    let row = table.x;
+    let col = table.y;
+    let index = 0;
+    let width = unit_size.width * table.x * unit_size.width;
+    let height = unit_size.width * table.y * unit_size.height;
+
+    let i = 0;
+    while (i < row) {
+      unit.push([]);
+      let k = 0;
+      while (k < col) {
+        let sprite = new PIXI.Sprite(unitTexture);
+        let unitContainer = new PIXI.Container();
+        let x = (k * unit_size.width) % width;
+        let y = (i * unit_size.height) % height;
+        sprite.interactive = true;
+        sprite.isDown = false;
+        sprite.isEmpty = true;
+        sprite.anchor.set(0, 0);
+        sprite.width = unit_size.width;
+        sprite.height = unit_size.height;
+        sprite.index = index++; // 唯一id
+        unitContainer.width = unit_size.width;
+        unitContainer.height = unit_size.height;
+        unitContainer.x = x;
+        unitContainer.y = y;
+        sprite.x = 0;
+        sprite.y = 0;
+        sprite.X = x / unit_size.width; // x坐标
+        sprite.Y = y / unit_size.height; // y 坐标
+        unit[i].push(sprite);
+        unitContainer.addChild(sprite);
+        container.addChild(unitContainer);
+        k++;
+      }
+      i++;
+    }
+
+    // 添加事件
+    for (let row = 0, uLen = unit.length; row < uLen; row++) {
+      add: for (let col = 0, len = unit[row].length; col < len; col++) {
+        // console.log(unit[row][col].x / unit_size.width, unit[row][col].y / unit_size.height);
+        for (let k = 0, fLen = block[row].length; k < fLen; k++) {
+          if (block[row][k].x === col && block[row][k].y === row) {
+            unit[row][col].isEmpty = false;
+            unit[row][col].texture = unitBlockTexture;
+            unit[row][col].buttonMode = true;
+            unit[row][col].on("tap", onClick);
+            unit_block.push(unit[row][col]);
+            continue add;
+          }
+        }
+      }
+    }
+    // 绘制边框
+    drawBorder(table, unit_data, container);
+    typeof callBack === "function" ? callBack() : void 0;
+  }
+
+  function onClick() {
+    input.focus();
+    const X = this.X,
+      Y = this.Y;
+    let cols = [],
+      rows = unit[Y];
+    // 重置默认
+    reset(unit_block);
+
+    this.isDown = !this.isDown;
+    unit.forEach(row => {
+      if (row[X].X === X) cols.push(row[X]);
+    });
+
+    if (this.selectRow !== undefined) {
+      if (this.isDown && this.selectRow) {
+        renderCol(X, Y, cols, rows);
+      } else {
+        renderRow(X, Y, rows, cols);
+      }
+    } else {
+      if (this.isDown) {
+        renderRow(X, Y, rows, cols);
+      } else {
+        renderCol(X, Y, cols, rows);
+      }
+    }
+
+    let key = selectUnit.unit.reduce((total, unit) => {
+      return total + unit.index.toString();
+    }, "");
+    tipsEl.innerText = tips[key];
+    console.log(key);
+  }
+
+  // 渲染行
+  function renderRow(x, y, row, col) {
+    let unit = aroundUnit(row, x, y, true);
+    let len = unit.length;
+    // 如果临近元素为为空 (1 代表自身) 渲染列
+    if (len <= 1) {
+      renderCol(x, y, col, row);
+      return;
+    }
+
+    unit.forEach(item => {
+      item.texture = unitBlockActiveTexture;
+      item.selectRow = true;
+    });
+
+    let storUnit = stor(unit);
+    selectUnit.isRow = true;
+    selectUnit.unit = storUnit;
+  }
+
+  // 渲染列
+  function renderCol(x, y, col, row) {
+    let unit = aroundUnit(col, x, y, false);
+    let len = unit.length;
+    // 如果临近元素为空 (1 代表自身) 渲染行
+    if (len <= 1) {
+      renderRow(x, y, row, col, true);
+      return;
+    }
+    unit.forEach(item => {
+      item.texture = unitBlockActiveTexture;
+      item.selectRow = false;
+    });
+
+    let storUnit = stor(unit);
+    selectUnit.isRow = false;
+    selectUnit.unit = storUnit;
+  }
+
+  // 获取相邻元素  arry 一维数组 行 或者 列
+  function aroundUnit(arry, x, y, selectRow) {
+    let n = selectRow ? x : y;
+    let len = arry.length;
+    let unit = [];
+    for (let i = 0; i < len; i++) {
+      if (arry[n + i] && arry[n + i].isEmpty) break;
+      if (arry[n + i]) {
+        unit.push(arry[n + i]);
+      }
+    }
+
+    for (let i = 1; i < len; i++) {
+      if (arry[n - i] && arry[n - i].isEmpty) break;
+      if (arry[n - i]) unit.push(arry[n - i]);
+    }
+    return unit;
+  }
+
+  // 重置视图
+  function reset(unit) {
+    unit.forEach(item => {
+      item.isDown = false;
+      item.texture = unitBlockTexture;
+    });
+  }
+
+  // 排序
+  function stor(unit) {
+    function compare(property) {
+      return function(a, b) {
+        var value1 = a[property];
+        var value2 = b[property];
+        return value1 - value2;
+      };
+    }
+    return unit.sort(compare("index"));
+  }
+
+  function drawBorder(table, block, ctx) {
+    let row = table.x,
+      col = table.y;
+    let containerWidth = row * unit_size.width,
+      containerHeight = col * unit_size.height;
+    let startY = unit_size.height,
+      startX = unit_size.width;
+    drawLine(
+      { width: 1, color: 0xb38743, alpha: 1 },
+      ctx,
+      containerWidth,
+      containerHeight,
+      startX,
+      startY,
+      row,
+      col
+    );
+  }
+
+  // 绘制线条
+  function drawLine(lineStyle, ctx, width, height, X, Y, col, row) {
+    let i = 1,
+      n = 1;
+    const graphics = new PIXI.Graphics();
+    // 绘制行
+    while (i < row) {
+      graphics.beginFill();
+      graphics.lineStyle(lineStyle.width, lineStyle.color, lineStyle.alpha);
+      graphics.moveTo(0, Y * i);
+      graphics.lineTo(width, Y * i);
+      graphics.endFill();
+      ctx.addChild(graphics);
+      i++;
+    }
+    // 绘制列
+    while (n < col) {
+      graphics.beginFill();
+      graphics.lineStyle(lineStyle.width, lineStyle.color, lineStyle.alpha);
+      graphics.moveTo(X * n, 0);
+      graphics.lineTo(X * n, height);
+      graphics.endFill();
+      ctx.addChild(graphics);
+      n++;
+    }
+  }
+
+  // 解决键盘遮住 输入框
+
+  $(document).on("focus", "input", function(e) {
+    setTimeout(
+      () => {
+        // this.scrollIntoViewIfNeeded(false);
+        this.scrollIntoView({
+          block: "end",
+          behavior: "smooth"
+        });
+      },
+      device.ios ? 200 : 0
+    );
+  });
+
+  // 输入
+  $(".input-container").on("click", ".game-input-send", async function(e) {
+    let value = $.trim(input.value);
+    if (value.length > selectUnit.unit.length) {
+      modal.toast(`最大可输入字数为${selectUnit.unit.length}个`);
+      return false;
+    }
+    let param = selectUnit.unit.map((item, index) => {
+      return {
+        value: value.charAt(index),
+        x: item.X,
+        y: item.Y,
+        index: item.index
+      };
+    });
+    console.log(param);
+    let flag = await new Promise((resolve, reject) => {
+      $.ajax({
+        async: true,
+        type: "post",
+        url: "./game.php",
+        data: { data: param },
+        success: function(data) {
+          if (data.status === "0") {
+            modal.toast("填错了哦");
+            input.value = "";
+            resolve(false);
+          } else {
+            resolve(true);
+          }
+        },
+        error: function(err) {
+          console.log(err);
+        }
+      });
+    });
+
+    if (!flag) return;
+
+    [...value].forEach((chart, index) => {
+      if (selectUnit.unit[index].parent.children.length > 1) {
+        selectUnit.unit[index].parent.children.forEach((sprite, i) => {
+          if (sprite.type === "text") sprite.text = chart;
+        });
+        return false;
+      }
+
+      let richText = new PIXI.Text(chart, fontStyle);
+      richText.type = "text";
+      richText.anchor.set(0.5);
+      richText.x = selectUnit.unit[index].parent.width / 2;
+      richText.y = selectUnit.unit[index].parent.height / 2;
+      selectUnit.unit[index].parent.addChild(richText);
+      // container.addChild(richText);
+    });
+    input.value = "";
+  });
+});
+```
+
+## PHP
+
+后端就比较容易了,前端传每一个字格 id 以及值，后端验证字格 id 值 就行了
+
+```php
+/*
+* @Author: Edward
+* @Date: 2018-05-02 23:27:31
+* @Last Modified by: Edward
+* @Email: 809537981@qq.com
+* @Last Modified time: 2018-05-03 16:26:08
+*/
+
+header('Content-Type:application/json; charset=utf-8');
+
+$post = $_POST['data'];
+
+$data = [
+  '1' => '局',
+  '11' => '外',
+  '5' => '繁',
+  '6' => '星',
+  '7' => '春',
+  '8' => '水',
+  '13' => '极',
+  '33' => '主',
+  '18' => '浒',
+  '21' => '人',
+  '22' => '类',
+  '23' => '简',
+  '24' => '史',
+  '28' => '传',
+  '27' => '人',
+  '26' => '名',
+  '37' => '民',
+  '46' => '梦',
+  '47' => '的',
+  '57' => '名',
+  '48' => '解',
+  '49' => '析',
+  '64' => '三',
+  '65' => '国',
+  '66' => '演',
+  '67' => '义',
+  '67' => '义',
+  '74' => '毛',
+  '81' => '呼',
+  '82' => '兰',
+  '83' => '河',
+  '84' => '传',
+  '40' => '存',
+  '41' => '在',
+  '42' => '主',
+  '43' => '义',
+  '51' => '细',
+  '61' => '雨',
+  '71' => '中',
+  '81' => '呼',
+  '90' => '呐',
+  '91' => '喊',
+];
+
+$flag = false;
+
+foreach($post as $index => $arry) {
+  if ($data[$arry['index']] == $arry['value']) {
+    $flag = true;
+  } else {
+    $flag = false;
+  }
+}
+
+if ($flag) {
+  echo '{"status": "1"}';
+} else {
+  echo '{"status": "0"}';
+}
+```
+
+收工

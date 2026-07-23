@@ -1,0 +1,46 @@
+/* 主题色 & 字体配置（从 VuePress config.scss 迁移） */
+:root {
+  --vp-c-brand-1: #2196f3;
+  --vp-c-brand-2: #f26d6d;
+  --vp-c-brand-3: #3eaf7c;
+  --vp-c-brand-soft: #fb9b5f;
+
+  --vp-font-family-base: 'Georgia', -apple-system, 'Nimbus Roman No9 L', 'PingFang SC', 'Hiragino Sans GB', 'Noto Serif SC', 'Microsoft Yahei', 'WenQuanYi Micro Hei', 'ST Heiti', sans-serif;
+}
+
+/* ========== 摄影页 - 瀑布流 ========== */
+.photography .photo-grid {
+  column-count: 4;
+  column-gap: 6px;
+}
+
+.photography .photo-grid > p {
+  margin: 0 0 6px 0;
+  line-height: 0;
+  overflow: hidden;
+  border-radius: 6px;
+  break-inside: avoid;
+}
+
+.photography .photo-grid > p img {
+  width: 100%;
+  height: auto;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  border-radius: 0;
+  display: block;
+}
+
+.photography .photo-grid > p img:hover {
+  transform: scale(1.05);
+}
+
+@media screen and (max-width: 1250px) {
+  .photography .photo-grid { column-count: 3; }
+}
+@media screen and (max-width: 997px) {
+  .photography .photo-grid { column-count: 2; }
+}
+@media screen and (max-width: 680px) {
+  .photography .photo-grid { column-count: 1; }
+}
