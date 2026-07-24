@@ -7,5 +7,5 @@
     "baseUrl": ".",
     "lib": ["DOM","DOM.Iterable", "ESNext"]
   },
-  "include": [".vitepress/**/*.ts",".vitepress/**/*.vue"]
+  "include": [".vitepress/**/*.ts",".vitepress/**/*.vue", "*.mts", "eslint.config.ts"]
 }
