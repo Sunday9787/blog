@@ -64,21 +64,21 @@ svg.template-area(
 
 ```js
 /**
-* @type {import('vue').Ref<{x: number, y: number} | null>}
-* 鼠标暂存的位置
-*/
+ * @type {import('vue').Ref<{x: number, y: number} | null>}
+ * 鼠标暂存的位置
+ */
 const stagePosition = ref(null)
 // 鼠标划过的宽高XY
 const rect = reactive({ w: 0, h: 0, x: 0, y: 0 })
 
 /**
-* @type {Map<number, Template.BuiltinComponent>}
-*/
+ * @type {Map<number, Template.BuiltinComponent>}
+ */
 const components = new Map()
 
 /**
-* @param {PointerEvent} e
-*/
+ * @param {PointerEvent} e
+ */
 const pointerdown = function (e) {
   if (vm.stageInstance.spaceDown) return
   const scale = props.scale / 100
@@ -100,8 +100,8 @@ const pointerdown = function (e) {
 
 ```js
 /**
-* @param {PointerEvent} e
-*/
+ * @param {PointerEvent} e
+ */
 const pointermove = function (e) {
   if (stagePosition.value) {
     const scale = props.scale / 100
@@ -131,14 +131,14 @@ const pointermove = function (e) {
 
 遍历所有控件，判断xy是否在框选的矩形范围内，如果框选内的组件Map存在则跳过，否则存进Map。
 
-*目前只实现了从左上角到右下角框选，没有实现另外三个方向*
+_目前只实现了从左上角到右下角框选，没有实现另外三个方向_
 
 ### 框选完成
 
 ```js
 /**
-* @param {PointerEvent} e
-*/
+ * @param {PointerEvent} e
+ */
 const pointerup = function (e) {
   stagePosition.value = null
   rect.w = rect.h = rect.x = rect.y = 0
@@ -174,6 +174,6 @@ const pointerup = function (e) {
 
 3. **可维护性**：如果需要变更全局 EventBus 的逻辑，直接修改父组件的处理逻辑即可，而不必调整子组件。
 
-*事实上，编辑器内所有的组件都是这样传递事件的*
+_事实上，编辑器内所有的组件都是这样传递事件的_
 
 ![好饿早知道不做前端了](https://static-1256180570.cos.ap-nanjing.myqcloud.com/image/1731608104.jpg?imageMogr2/interlace/1/quality/100/thumbnail/400x)

@@ -40,37 +40,37 @@ tags: [Vue, 虚拟列表]
 
 ```html
 <template>
-  <div class='app-virtual-list'>
-    <ol class='app-virtual-container' style={this.containerStyle}>
+  <div class="app-virtual-list">
+    <ol class="app-virtual-container" style="{this.containerStyle}">
       <!-- 只渲染可视区域列表数据 -->
     </ol>
   </div>
 </template>
 
 <style>
-.app-virtual-list {
-  position: relative;
-  height: 100%;
-  padding: 10px 0;
-  overflow-y: auto;
-}
-.app-virtual-container {
-  position: absolute;
-  inset: 0;
-  height: 100%;
-  padding: 0;
-  margin: 0;
-  overflow: hidden;
-  list-style: none;
-}
-.app-virtual-scroll-bar {
-  position: absolute;
-  top: 0;
-  right: 0;
-  z-index: -1;
-  width: 1px;
-  visibility: hidden;
-}
+  .app-virtual-list {
+    position: relative;
+    height: 100%;
+    padding: 10px 0;
+    overflow-y: auto;
+  }
+  .app-virtual-container {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    list-style: none;
+  }
+  .app-virtual-scroll-bar {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: -1;
+    width: 1px;
+    visibility: hidden;
+  }
 </style>
 ```
 
@@ -286,8 +286,6 @@ loading.value = true
 context.expose({ loaded })
 ```
 
-
-
 ## 完整的代码
 
 组件
@@ -432,11 +430,7 @@ export default defineComponent({
         <div class='app-virtual-scroll-bar' style={{ height: this.listHeight + 'px' }} />
         <ol class='app-virtual-container' style={this.containerStyle}>
           {this.visibleData.map(item => (
-            <li
-              class='app-virtual-item'
-              key={item[this.options.rowKey]}
-              style={{ height: this.itemHeight + 'px' }}
-            >
+            <li class='app-virtual-item' key={item[this.options.rowKey]} style={{ height: this.itemHeight + 'px' }}>
               {this.$scopedSlots.default(item)}
             </li>
           ))}

@@ -29,10 +29,10 @@ Run "pnpm approve-builds" to pick which dependencies should be allowed to run sc
 
 拿出祖传对比大法：
 
-| 环境 | pnpm 版本 |
-| :--- | :--- |
-| 阿里云流水线 | 11.0.8 |
-| 本地开发环境 | 10.18.3 |
+| 环境         | pnpm 版本 |
+| :----------- | :-------- |
+| 阿里云流水线 | 11.0.8    |
+| 本地开发环境 | 10.18.3   |
 
 **好家伙！** 流水线偷偷用上了 pnpm v11，而本地的 v10 表示情绪稳定。
 
@@ -51,10 +51,10 @@ pnpm install && pnpm build
 
 ### 第三回合：v10 vs v11 态度对比
 
-| pnpm 版本 | 遇到未批准构建脚本时的态度 |
-| :--- | :--- |
-| **v10** | 「嘿，有个脚本没批准哦，不过我先忍了」😑 |
-| **v11** | 「没批准？那我不干了！」😤 |
+| pnpm 版本 | 遇到未批准构建脚本时的态度               |
+| :-------- | :--------------------------------------- |
+| **v10**   | 「嘿，有个脚本没批准哦，不过我先忍了」😑 |
+| **v11**   | 「没批准？那我不干了！」😤               |
 
 ## 解决方案
 
@@ -111,15 +111,13 @@ pnpm v11 这次升级，把警告改成报错，属于设计层面的「加强�
 
 ## 最终配置一览
 
-```yaml
-# pnpm-workspace.yaml
+```yaml [pnpm-workspace.yaml]
 onlyBuiltDependencies:
   - core-js
   - simple-git-hooks
 ```
 
-```json
-// package.json（可选，但强烈建议加）
+```json [package.json]
 {
   "packageManager": "pnpm@10.18.3"
 }

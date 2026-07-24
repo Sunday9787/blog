@@ -26,11 +26,11 @@ tags: [Typescript, 装饰器]
 @file index.ts
 
 ```ts
-function Log<T, K extends string>(...args: K extends keyof T ? (T[K] extends (...args: any[]) => any ? Parameters<T[K]> : never) : never) {
+function Log<T, K extends string>(
+  ...args: K extends keyof T ? (T[K] extends (...args: any[]) => any ? Parameters<T[K]> : never) : never
+) {
   return function (target: T, key: K, descriptor: PropertyDescriptor) {
-    descriptor.value = function (...args: any[]) {
-
-    }
+    descriptor.value = function (...args: any[]) {}
   }
 }
 
@@ -50,7 +50,6 @@ class Test {
 }
 
 const test = new Test()
-
 ```
 
 @setting
@@ -95,7 +94,7 @@ interface Data {
 }
 
 class Test {
-  constructor(public id: number) { }
+  constructor(public id: number) {}
 
   @Log(data => data.name)
   say(data: Data) {

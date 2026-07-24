@@ -20,11 +20,7 @@ mounted 后 把 query的参数 赋值到 form
   <div>
     <el-button type="text" @click="dialogVisible = true">点击打开 Dialog</el-button>
 
-    <el-dialog
-      title="提示"
-      v-model="dialogVisible"
-      width="80%"
-      @closed="closed">
+    <el-dialog title="提示" v-model="dialogVisible" width="80%" @closed="closed">
       <el-form :model="form" size="small" label-width="100px" ref="form">
         <el-form-item label="审批人" prop="user">
           <el-input v-model="form.user" placeholder="审批人" />
@@ -45,7 +41,7 @@ mounted 后 把 query的参数 赋值到 form
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent } from 'vue'
 import { ElDialog, ElButton, ElForm, ElInput, ElFormItem, ElOption, ElSelect } from 'element-plus'
 
 export default defineComponent({
@@ -64,7 +60,7 @@ export default defineComponent({
         user: '',
         region: ''
       },
-      dialogVisible: false,
+      dialogVisible: false
     }
   },
   mounted() {
@@ -142,9 +138,9 @@ this.form.user = '55555'
 这个时候 Dialog 在初始化显示（此时并不能获取form），dom 没有完全更新完毕
 
 然后 执行了 给form 赋值动作，
-form这个时候并没有渲染，还未初始化（那么就相当于 form 的初始默认值是  '55555'）
-全部初始化后 弹框内 form 表单默认值是 有了  '5555'，但是关闭的时候这个值并没有被清空
-`this.$refs.form.resetFields()`  也执行了
+form这个时候并没有渲染，还未初始化（那么就相当于 form 的初始默认值是 '55555'）
+全部初始化后 弹框内 form 表单默认值是 有了 '5555'，但是关闭的时候这个值并没有被清空
+`this.$refs.form.resetFields()` 也执行了
 
 这是因为 element的form `resetFields()`方法
 这个方法 还原了 form 的默认值，默认值就是我们赋值的 '5555'
@@ -157,20 +153,14 @@ form这个时候并没有渲染，还未初始化（那么就相当于 form 的�
 
 `this.$nextTick` 保证了数据更新后DOM完全渲染完毕后，数据，视图的正确性，要善于利用
 
-::: playground#vue 演示1
-
-@file App.vue
+::: playground
 
 ```vue
 <template>
   <div>
     <el-button type="text" @click="dialogVisible = true">点击打开 Dialog</el-button>
 
-    <el-dialog
-      title="提示"
-      v-model="dialogVisible"
-      width="80%"
-      @closed="closed">
+    <el-dialog title="提示" v-model="dialogVisible" width="80%" @closed="closed">
       <el-form :model="form" size="small" label-width="100px" ref="form">
         <el-form-item label="审批人" prop="user">
           <el-input v-model="form.user" placeholder="审批人" />
@@ -191,8 +181,8 @@ form这个时候并没有渲染，还未初始化（那么就相当于 form 的�
 </template>
 
 <script lang="ts">
-import {defineComponent} from 'vue';
-import {ElDialog, ElButton, ElForm, ElInput, ElFormItem, ElOption, ElSelect} from 'element-plus'
+import { defineComponent } from 'vue'
+import { ElDialog, ElButton, ElForm, ElInput, ElFormItem, ElOption, ElSelect } from 'element-plus'
 
 export default defineComponent({
   components: {
@@ -210,7 +200,7 @@ export default defineComponent({
         user: '',
         region: ''
       },
-      dialogVisible: false,
+      dialogVisible: false
     }
   },
   mounted() {
@@ -239,8 +229,6 @@ export default defineComponent({
 </style>
 ```
 
-@import
-
 ```json
 {
   "imports": {
@@ -248,3 +236,5 @@ export default defineComponent({
   }
 }
 ```
+
+:::

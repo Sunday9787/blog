@@ -62,8 +62,8 @@ Xb => 横轴下边
 
 ```js
 /**
-   * @type {import('vue').Ref<Array<{type: 'yl'|'yc'|'yr'|'xt'|'xc'|'xb',direction: string, visible: boolean, position: {left: number, top: number}}>>}
-   */
+ * @type {import('vue').Ref<Array<{type: 'yl'|'yc'|'yr'|'xt'|'xc'|'xb',direction: string, visible: boolean, position: {left: number, top: number}}>>}
+ */
 const markLine = ref([
   { type: 'yl', direction: 'vertical', visible: false, position: { left: 0, top: 0 } },
   { type: 'yc', direction: 'vertical', visible: false, position: { left: 0, top: 0 } },
@@ -94,10 +94,7 @@ svg.template-mark-line(
 
 ```vue
 <template>
-TemplateMarkLine(v-for="item of markLine"
-  :key="item.type"
-  :position="item.position"
-  :direction="item.direction"
+  TemplateMarkLine(v-for="item of markLine" :key="item.type" :position="item.position" :direction="item.direction"
   :visible="item.visible")
 </template>
 ```
@@ -121,10 +118,10 @@ TemplateMarkLine(v-for="item of markLine"
 }
 ```
 
-| Name        | Type                        | 说明 |
-| ----------- | --------------------------- | ---- |
-| `direction` | `"horizontal" | "vertical"` | 方向 |
-| `position`  | `{x: Number, y: Number}`    | 位置 |
+| Name        | Type                     | 说明        |
+| ----------- | ------------------------ | ----------- |
+| `direction` | `"horizontal"            | "vertical"` | 方向 |
+| `position`  | `{x: Number, y: Number}` | 位置        |
 
 ## 实现
 
@@ -222,8 +219,8 @@ const conditions = {
 
 ```js
 /**
-  * @param {Template.Event<Template.BuiltinComponent>} e
-  */
+ * @param {Template.Event<Template.BuiltinComponent>} e
+ */
 const moveHandle = function (e) {
   const currentComponent = e.detail
   // 获得当前控件 rect
@@ -250,8 +247,8 @@ const moveHandle = function (e) {
         condition += 1
 
         /**
-          * @type {[number, number]}
-          */
+         * @type {[number, number]}
+         */
         const [x, y] = [
           position.left || currentComponent.props.position.x,
           position.top || currentComponent.props.position.y

@@ -130,14 +130,14 @@ class User {
 // views/user/index.vue
 defineComponent({
   setup() {
-    const user = ref<User>(new User());
+    const user = ref<User>(new User())
 
     // 更新&新增
-    const save = async function() {
+    const save = async function () {
       const message = user.id > 0 ? '更新成功' : '创建成功'
       const data = instanceToPlain(user, { strategy: 'excludeAll' })
       await UserUpdate(data)
-			Notify.success(message)
+      Notify.success(message)
     }
 
     return {
@@ -203,8 +203,7 @@ class User {
 
 #### 服务类：Service
 
-```ts
-// global.d.ts
+```ts [global.d.ts]
 declare namespace AppRequest {
   interface List {
     current?: number
@@ -278,9 +277,7 @@ export abstract class AbstractEntity {
 
 #### 子类实现
 
-```ts
-// user.service.ts
-
+```ts [user.service.ts]
 export class UserService extends AbstractService {
   baseURL = '/user'
 
@@ -304,7 +301,7 @@ export class UserEntity extends AbstractEntity {
   static statusMap = new Map<UserEntity['status'], { text: string; type: Utils.StatusType }>(
     [0, { text: '未初始化', type: 'warning' }],
     [1, { text: '未认证', type: 'info' }],
-    [2, { text: '已认证', type: 'success' }],
+    [2, { text: '已认证', type: 'success' }]
   )
 
   @Expose() id = 0
@@ -312,7 +309,7 @@ export class UserEntity extends AbstractEntity {
   @Expose() avatar: string
   @Expose() email: string
   /* 0未初始化 1未实名 2已实名 */
-  status: 0|1|2
+  status: 0 | 1 | 2
   get statusText() {
     return UserEntity.statusMap.get(this.status)!.text
   }
@@ -414,7 +411,7 @@ export function useLoading(cb: UseActionCallback) {
 // views/user/hooks/index.ts
 export function useUser(props: Utils.ActionProps) {
   const user = ref(new UserEntity(props.id))
-  
+
   const { loading } = useLoading(function (request) {
     if (props.type !== 'add') {
       request(async function () {

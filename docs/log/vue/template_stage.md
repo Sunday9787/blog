@@ -34,60 +34,60 @@ tags: [Vue, 编辑器, 设计模式]
 
 **position 和 transform 使用场景**
 
-| 场景                               | 推荐使用               | 原因                                                         |
-| ---------------------------------- | ---------------------- | ------------------------------------------------------------ |
-| 精确移动元素且需要交互事件         | `position`             | 元素的实际边界会随之移动，点击或事件触发范围和视觉一致。     |
-| 动画效果或临时位移，事件触发不重要 | `transform: translate` | 适合单纯的视觉效果，不影响事件触发。                         |
+| 场景                               | 推荐使用               | 原因                                                                           |
+| ---------------------------------- | ---------------------- | ------------------------------------------------------------------------------ |
+| 精确移动元素且需要交互事件         | `position`             | 元素的实际边界会随之移动，点击或事件触发范围和视觉一致。                       |
+| 动画效果或临时位移，事件触发不重要 | `transform: translate` | 适合单纯的视觉效果，不影响事件触发。                                           |
 | 动画效果中同时需要事件触发         | `transform` + 调整逻辑 | 如果事件范围有问题，可以额外调整父容器或通过 JavaScript 手动处理事件触发逻辑。 |
 
 ## 视图
 
- ```vue
+```vue
 <template lang="pug">
 .template-stage(
-  tabindex="-1"
-  :style="stageStyle"
-  @pointerdown="unSelectComponent"
-  @keydown.delete="deleteComponent"
-  @drop="dropHandle"
-  @dragover.prevent="noop")
-  TemplateContextmenu(:scale="scale")
-  TemplateArea(:scale="scale" @area="area")
-  TemplateMarkLine(v-for="item of markLine"
-    :key="item.type"
-    :position="item.position"
-    :direction="item.direction"
-    :visible="item.visible")
-  TemplateControl(v-for="component of store.componentsData"
-    v-model="component.visible"
-    :key="component.id"
-    :scale="scale"
-    :lock="component.props.lock"
-    :zIndex="component.props.zIndex"
-    :position.sync="component.props.position"
-    :size.sync="component.props.size"
-    @moveStart="moveStart(component)"
-    @move="move(component)"
-    @moveEnd="moveEnd(component)"
-    @resizeStart="resizeStart(component)"
-    @resize="resize(component)"
-    @resizeEnd="resizeEnd(component)"
-    @select="selectComponent(component)")
-    component(
-      top
-      group
-      ref="builtinGroupComponentRef"
-      :is="component.name"
-      :children="component.children"
-      v-bind="component.props"
-      v-if="component.name === 'builtin-group'")
-    component(
-      ref="builtinComponentRef"
-      :is="component.name"
-      v-bind="component.props"
-      v-else)
+ tabindex="-1"
+ :style="stageStyle"
+ @pointerdown="unSelectComponent"
+ @keydown.delete="deleteComponent"
+ @drop="dropHandle"
+ @dragover.prevent="noop")
+ TemplateContextmenu(:scale="scale")
+ TemplateArea(:scale="scale" @area="area")
+ TemplateMarkLine(v-for="item of markLine"
+   :key="item.type"
+   :position="item.position"
+   :direction="item.direction"
+   :visible="item.visible")
+ TemplateControl(v-for="component of store.componentsData"
+   v-model="component.visible"
+   :key="component.id"
+   :scale="scale"
+   :lock="component.props.lock"
+   :zIndex="component.props.zIndex"
+   :position.sync="component.props.position"
+   :size.sync="component.props.size"
+   @moveStart="moveStart(component)"
+   @move="move(component)"
+   @moveEnd="moveEnd(component)"
+   @resizeStart="resizeStart(component)"
+   @resize="resize(component)"
+   @resizeEnd="resizeEnd(component)"
+   @select="selectComponent(component)")
+   component(
+     top
+     group
+     ref="builtinGroupComponentRef"
+     :is="component.name"
+     :children="component.children"
+     v-bind="component.props"
+     v-if="component.name === 'builtin-group'")
+   component(
+     ref="builtinComponentRef"
+     :is="component.name"
+     v-bind="component.props"
+     v-else)
 </template>
- ```
+```
 
 `tabindex="-1"`这个属性很重要，不设置这个，原素无法触发键盘事件
 
@@ -159,15 +159,15 @@ export default {
     return {
       stageInstance: this
     }
-  },
+  }
 }
 ```
 
-| Name          | Type                   | 说明                                                         |
-| ------------- | ---------------------- | ------------------------------------------------------------ |
-| `scale`       | Number                 | 缩放数值（10-100）                                           |
-| `position`    | {x: Number, y: Number} | 画布位置                                                     |
-| `spaceDown`   | Boolean                | 空格键是否被按下（按下后，拖动鼠标即可拖动画布）             |
+| Name          | Type                   | 说明                                                                    |
+| ------------- | ---------------------- | ----------------------------------------------------------------------- |
+| `scale`       | Number                 | 缩放数值（10-100）                                                      |
+| `position`    | {x: Number, y: Number} | 画布位置                                                                |
+| `spaceDown`   | Boolean                | 空格键是否被按下（按下后，拖动鼠标即可拖动画布）                        |
 | `scaleManual` | Boolean                | 是否手动调整缩放（`true`跟随鼠标位置缩放，`false`手动点击缩放按钮缩放） |
 
 ## 实现
@@ -207,21 +207,20 @@ export default {
 
 **添加控件逻辑**
 
-```text
-aside=>start: 控件栏
-stage=>operation: 拖拉到画布
+```mermaid
+graph TD
+  aside(["控件栏"])
+  stage["拖拉到画布"]
+  state{"控件是否使用"}
+  disableMove["禁止拖动"]
+  allowMove["拖动"]
+  init["初始化控件"]
+  addComponentItem["添加到画布"]
+  endNode(["结束"])
 
-state=>condition: 控件是否使用
-disableMove=>operation: 禁止拖动
-allowMove=>operation: 拖动
-
-init=>operation: 初始化控件
-addComponentItem=>operation: 添加到画布
-e=>end: 结束
-
-aside->stage->state
-state(yes)->allowMove->init->addComponentItem->e
-state(no)->disableMove->e
+  aside --> stage --> state
+  state -->|yes| allowMove --> init --> addComponentItem --> endNode
+  state -->|no| disableMove --> endNode
 ```
 
 **添加控件**

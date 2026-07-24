@@ -21,33 +21,32 @@ tags: [Typescript, Vue]
 
 ## 传统
 
-```ts
-import { deepClone } from "lodash"
+```ts [useUser.ts]
+import { deepClone } from 'lodash'
 
 // 假设 数据是从 后端获取
-// useUser.ts
 
 export function useUser() {
   return {
     id: 1,
-    name: "至尊宝",
+    name: '至尊宝',
     age: 27,
-    lover: "紫霞仙子"
+    lover: '紫霞仙子'
   }
 }
 
 // user.vue
 const user = ref({
   id: 0,
-  name: "",
+  name: '',
   age: 0,
-  lover: ""
+  lover: ''
 })
 
 // 获取用户
 const data = useUser()
 // copy
-const originData = deepClone(data);
+const originData = deepClone(data)
 
 user.value = data
 
@@ -72,7 +71,7 @@ const valueWeakMap = new WeakMap<AbstractEntity, EntityJSON<AbstractEntity>>()
 export abstract class AbstractEntity {
   constructor() {
     // 注意这里
-		const self = this
+    const self = this
     window.setTimeout(function () {
       valueWeakMap.set(self, self.toJSON())
     })
@@ -89,7 +88,7 @@ export abstract class AbstractEntity {
 }
 ```
 
-> 这里可以思考一下 为什么 要 setTimeout 延时 和 reset 方法内 为何要  toRaw
+> 这里可以思考一下 为什么 要 setTimeout 延时 和 reset 方法内 为何要 toRaw
 
 ### 实体
 
@@ -105,16 +104,15 @@ export class UserEntity extends AbstractEntity {
 
 ### 视图
 
-```ts
-// hooks.ts
+```ts [hooks.ts]
 import { plainToInstance } from 'class-transformer'
 
 // 假设已获取到后端数据
 export function useUser() {
   const data = new UserEntity()
 
-  Promise.resolve({name: "至尊宝", age: 27, lover: "紫霞仙子"}).then(function (response) {
-  	data.value = ref(plainToInstance(UserEntity, response))
+  Promise.resolve({ name: '至尊宝', age: 27, lover: '紫霞仙子' }).then(function (response) {
+    data.value = ref(plainToInstance(UserEntity, response))
   })
 
   return data
@@ -123,22 +121,22 @@ export function useUser() {
 
 ```vue
 <template>
-	<form>
+  <form>
     <div>
-    	<label>用户名</label>
-    	<input v-model:value="user.name" />
-  	</div>
+      <label>用户名</label>
+      <input v-model:value="user.name" />
+    </div>
     <div>
-    	<label>年龄</label>
-    	<input v-model:value="user.age" />
-  	</div>
+      <label>年龄</label>
+      <input v-model:value="user.age" />
+    </div>
     <div>
-    	<label>喜欢</label>
-    	<input v-model:value="user.lover" />
-  	</div>
+      <label>喜欢</label>
+      <input v-model:value="user.lover" />
+    </div>
     <div>
-    	<button @click="user.reset()">重置</button>
-  	</div>
+      <button @click="user.reset()">重置</button>
+    </div>
   </form>
 </template>
 
@@ -159,9 +157,9 @@ const user = useUser()
 
 先看看MDN怎么解释
 
->[WeakMap](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/WeakMap)是一种**键值对**的集合，其中的键必须是对象或[非全局注册的符号](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Symbol#全局共享的_symbol)，且值可以是任意的 [JavaScript 类型](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Data_structures)，并且不会创建对它的键的强引用。换句话说，一个对象作为 `WeakMap` 的键存在，不会阻止该对象被垃圾回收。一旦一个对象作为键被回收，那么在 `WeakMap` 中相应的值便成为了进行垃圾回收的候选对象，只要它们没有其他的引用存在。唯一可以作为 `WeakMap` 的键的原始类型是[非全局注册的符号](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Symbol#全局共享的_symbol)，因为非全局注册的符号是保证唯一的，并且不能被重新创建。
+> [WeakMap](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/WeakMap)是一种**键值对**的集合，其中的键必须是对象或[非全局注册的符号](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Symbol#全局共享的_symbol)，且值可以是任意的 [JavaScript 类型](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Data_structures)，并且不会创建对它的键的强引用。换句话说，一个对象作为 `WeakMap` 的键存在，不会阻止该对象被垃圾回收。一旦一个对象作为键被回收，那么在 `WeakMap` 中相应的值便成为了进行垃圾回收的候选对象，只要它们没有其他的引用存在。唯一可以作为 `WeakMap` 的键的原始类型是[非全局注册的符号](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Symbol#全局共享的_symbol)，因为非全局注册的符号是保证唯一的，并且不能被重新创建。
 >
->`WeakMap` 允许将数据与对象相关联，而不阻止键对象被垃圾回收，即使值引用了键。然而，`WeakMap` 并不允许观察其键的生命周期，这就是为什么它不允许枚举；如果 `WeakMap` 提供了任何获得其键的列表的方法，那么这些列表将会依赖于垃圾回收的状态，这引入了不确定性。如果你想要可以获取键的列表，你应该使用 [`Map`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Map) 而不是 `WeakMap`。
+> `WeakMap` 允许将数据与对象相关联，而不阻止键对象被垃圾回收，即使值引用了键。然而，`WeakMap` 并不允许观察其键的生命周期，这就是为什么它不允许枚举；如果 `WeakMap` 提供了任何获得其键的列表的方法，那么这些列表将会依赖于垃圾回收的状态，这引入了不确定性。如果你想要可以获取键的列表，你应该使用 [`Map`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Map) 而不是 `WeakMap`。
 
 说白了WeakMap 的 key 如果是对象，且这个对象被回收后 那么 所对应的 value 也就被 回收了，那么我们就可以利用这个特性去做数据缓存的操作 嘿嘿嘿🤓
 

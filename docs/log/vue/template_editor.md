@@ -32,7 +32,7 @@ tags: [Vue, 编辑器, 设计模式]
 
 再将左右比例从新计算即可
 
-*ps: 这个功能我查了好多资料,终于搞明白了🥲，不理解的仔细看代码部分注释*
+_ps: 这个功能我查了好多资料,终于搞明白了🥲，不理解的仔细看代码部分注释_
 
 ## 视图
 
@@ -75,8 +75,8 @@ const { refComponent } = useToHtml()
 const scale = reactive({ step: 5, value: 100, max: 200, mini: 20, manual: false })
 
 /**
-  * @param {WheelEvent} e
-  */
+ * @param {WheelEvent} e
+ */
 const mousewheel = function (e) {
   vm.scaleManual(false)
 

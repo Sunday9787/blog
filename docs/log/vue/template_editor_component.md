@@ -197,8 +197,7 @@ export default mixin
 
 ### 组件
 
-```vue
-// builtin-input.vue
+```vue [builtin-input.vue]
 <template lang="pug">
 div(v-if="isShape" :style="containerStyle")
   label(:for="id") {{ label }}
@@ -277,7 +276,7 @@ export function createBuiltinComponent(data, type = 'normal') {
 }
 ```
 
-*因为没有涉及到后端数据填充，所以只设计了 `name` 字段，key 字段未设计实现*
+_因为没有涉及到后端数据填充，所以只设计了 `name` 字段，key 字段未设计实现_
 
 分层架构
 
@@ -309,7 +308,7 @@ interface BuiltinComponentProps {
     value: BuiltinComponentPropsOptions[]
     del(key: number): void
     add(): void
-	}
+  }
   get options(): BuiltinComponentPropsOptions[]
 }
 ```
@@ -370,7 +369,6 @@ export function initBuiltinComponentProps(props, name, type) {
 所以option.value 值必须是一个响应式
 
 在这里使用 vue2 的 [observable](https://v2.cn.vuejs.org/v2/api/#Vue-observable) 主要是考虑去掉.value尾巴 又可以获得响应式数据
-
 
 ### Property 数据模型
 
@@ -464,7 +462,7 @@ y = Math.min.apply(null,所有组件的top)
 
 #### Size
 
-*w 和 h 仅仅只需要找到差值即可 不需要关心正负值*
+_w 和 h 仅仅只需要找到差值即可 不需要关心正负值_
 
 w = Math.abs(Math.min.apply(null, 所有组件的left) - Math.max.apply(null, 所有组件的right))
 

@@ -141,8 +141,8 @@ src/views/user.vue
 
 ```html
 <form class="form form--simple">
-    <input class="form__input" type="text" />
-    <button class="form__button form__button--disabled">submit</button>
+  <input class="form__input" type="text" />
+  <button class="form__button form__button--disabled">submit</button>
 </form>
 ```
 
@@ -150,13 +150,13 @@ src/views/user.vue
 
 ```html
 <div class="card">
-    <div class="card-head">
-        <h1 class="card-head__title">标题</h1>
-        <span class="card-head__title__sub">子标题</span>
-    </div>
-    <div class="card-inner">
-        <slot />
-    </div>
+  <div class="card-head">
+    <h1 class="card-head__title">标题</h1>
+    <span class="card-head__title__sub">子标题</span>
+  </div>
+  <div class="card-inner">
+    <slot />
+  </div>
 </div>
 ```
 
@@ -164,13 +164,13 @@ src/views/user.vue
 
 ```html
 <div class="card">
-    <div class="head">
-        <h1 class="title">标题</h1>
-        <span class="title-sub">子标题</span>
-    </div>
-    <div class="inner">
-        <slot />
-    </div>
+  <div class="head">
+    <h1 class="title">标题</h1>
+    <span class="title-sub">子标题</span>
+  </div>
+  <div class="inner">
+    <slot />
+  </div>
 </div>
 ```
 
@@ -178,10 +178,10 @@ src/views/user.vue
 
 ```html
 <article class="article">
-    <div class="article-body">
-        <button class="article__button-primary">按钮1</button>
-        <button class="article__button-success">按钮2</button>
-    </div>
+  <div class="article-body">
+    <button class="article__button-primary">按钮1</button>
+    <button class="article__button-success">按钮2</button>
+  </div>
 </article>
 ```
 
@@ -189,10 +189,10 @@ src/views/user.vue
 
 ```html
 <article class="article">
-    <div class="body">
-        <button class="button-primary">按钮1</button>
-        <button class="button-success">按钮2</button>
-    </div>
+  <div class="body">
+    <button class="button-primary">按钮1</button>
+    <button class="button-success">按钮2</button>
+  </div>
 </article>
 ```
 
@@ -217,33 +217,33 @@ src/views/user.vue
 
 ```css
 .card {
-    /** 元素位置 层级 显示方式 */
-    position: reactive;
-    display: block;
+  /** 元素位置 层级 显示方式 */
+  position: reactive;
+  display: block;
 
-    /** 元素大小尺寸 对齐方式 */
-    padding: 10px;
-    margin: 0 auto;
+  /** 元素大小尺寸 对齐方式 */
+  padding: 10px;
+  margin: 0 auto;
 
-    /** 字体 行高 */
-    color: #333;
-    font-size: 16px;
-    line-height: 1.6;
-    text-align: left;
+  /** 字体 行高 */
+  color: #333;
+  font-size: 16px;
+  line-height: 1.6;
+  text-align: left;
 
-    /** 颜色 */
-    color: #333;
-    background-color: #fff;
+  /** 颜色 */
+  color: #333;
+  background-color: #fff;
 
-    /** 元素外貌修饰 */
-    cursor: default;
-    border-radius: 8px;
-    border: 1px solid #e8e8e8;
+  /** 元素外貌修饰 */
+  cursor: default;
+  border-radius: 8px;
+  border: 1px solid #e8e8e8;
 
-    /** 动画过度设置 */
-    transition-duration: 0.1s;
-    transition-timing-function: ease-in;
-    transition-property: color;
+  /** 动画过度设置 */
+  transition-duration: 0.1s;
+  transition-timing-function: ease-in;
+  transition-property: color;
 }
 ```
 
@@ -341,11 +341,11 @@ const TABLE_TITLE = '销售数据'
 
 ```js
 function createTable() {
-    return { data: [], loading: false }
+  return { data: [], loading: false }
 }
 
 function getName() {
-    return this.name
+  return this.name
 }
 ```
 

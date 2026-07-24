@@ -8,7 +8,7 @@ tags: [web安全]
 不知道有没有人跟我一样 打开一个网站喜欢 `ctrl + shift + i` 😀 不过有时候会发现 a 标签 加了一些东西
 
 ```html
-<a href="xxx" target="_blank" rel="nofollow noopener noreferrer">
+<a href="xxx" target="_blank" rel="nofollow noopener noreferrer"></a>
 ```
 
 <!-- more -->
@@ -29,22 +29,22 @@ ok 为什么要用这个呢
 
 ```html
 <html lang="en">
-<body>
-  <a href="http://www.b.com" target="_blank">http://www.b.com</a>
-</body>
+  <body>
+    <a href="http://www.b.com" target="_blank">http://www.b.com</a>
+  </body>
 </html>
 ```
 
 ```html
 <!-- b.com下的页面 -->
 <html lang="en">
-<body>
-  <script type="text/javascript">
-    if (opener) {
-      opener.window.location.href="https://google.com";
-    }
-  </script>
-</body>
+  <body>
+    <script type="text/javascript">
+      if (opener) {
+        opener.window.location.href = 'https://google.com'
+      }
+    </script>
+  </body>
 </html>
 ```
 

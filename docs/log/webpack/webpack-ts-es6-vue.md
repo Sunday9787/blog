@@ -19,7 +19,7 @@ categories: [webpack]
 
 那么现在开始吧
 
-------
+---
 
 # Webpack 的四大核心
 
@@ -36,18 +36,18 @@ categories: [webpack]
 
 ```js
 module.exports = {
-  mode: process.env.NODE_ENV,  // 启用不同类型的 mode 得到的优化效果不一样
-  devtool: 'source-map',  // webpack serve 运行的时候 添加 source-map
-  entry: util.resolve('src/components/main.ts'),   // 入口文件
+  mode: process.env.NODE_ENV, // 启用不同类型的 mode 得到的优化效果不一样
+  devtool: 'source-map', // webpack serve 运行的时候 添加 source-map
+  entry: util.resolve('src/components/main.ts'), // 入口文件
   output: {
-    filename: 'index.js',  // 打包后的文件名
-    path: util.resolve('dist'),   // 输出的目录
-    publicPath: '/',  // 结合 HtmlWebpackPlugin 使用，定义资源基准地址
+    filename: 'index.js', // 打包后的文件名
+    path: util.resolve('dist'), // 输出的目录
+    publicPath: '/', // 结合 HtmlWebpackPlugin 使用，定义资源基准地址
     // chunkFilename: '[id].js',    // 哈希name
-    libraryTarget: 'umd',  // 打包成什么类型模块 如果打包成 common 模块推荐 commonjs2
-    library: 'swiper',  // 对外暴露的模块名称
-    umdNamedDefine: true,  // 如果设置了 libraryTarget： 'umd' 则 需要设置 umdNamedDefine: true
-  },
+    libraryTarget: 'umd', // 打包成什么类型模块 如果打包成 common 模块推荐 commonjs2
+    library: 'swiper', // 对外暴露的模块名称
+    umdNamedDefine: true // 如果设置了 libraryTarget： 'umd' 则 需要设置 umdNamedDefine: true
+  }
   // ...more
 }
 ```
@@ -64,11 +64,11 @@ module.exports = {
 module.exports = {
   // ...more
   resolve: {
-    extensions: ['.js', '.vue', '.json', '.ts'],  // 可以被解析的文件
+    extensions: ['.js', '.vue', '.json', '.ts'], // 可以被解析的文件
     alias: {
-      '@': util.resolve('src'), // 别名 tsconfig 也同样需要配置一份  详见  tsconfig `paths`选项
-    },
-  },
+      '@': util.resolve('src') // 别名 tsconfig 也同样需要配置一份  详见  tsconfig `paths`选项
+    }
+  }
 }
 ```
 
@@ -79,7 +79,7 @@ module.exports = {
 ```js
 module.exports = {
   // ...more
-  externals: [{ vue: 'Vue' }],  // 外部已经有的依赖模块 至于为何是 数组 或者对象 字符串 还是自己百度一下实际测试，我说的可能不太对，总的来说是 模块对外暴露的名称 和 模块 名称
+  externals: [{ vue: 'Vue' }] // 外部已经有的依赖模块 至于为何是 数组 或者对象 字符串 还是自己百度一下实际测试，我说的可能不太对，总的来说是 模块对外暴露的名称 和 模块 名称
 }
 ```
 
@@ -93,7 +93,7 @@ module.exports = {
 - ts ts-loader
 - scss sass-loader
 
-*loader 的执行顺序是 从 `右` 到 `左` 切记 loader顺序错误依然不会正确打包*
+_loader 的执行顺序是 从 `右` 到 `左` 切记 loader顺序错误依然不会正确打包_
 
 - 解析 `.ts` 首先要通过ts-loader 检查ts类型校验 然后 被编译成esnext 模块，babel-loader 再编译成浏览器能处理的js模块和js版本
 
@@ -105,9 +105,9 @@ module.exports = {
       // ...more
       {
         test: /\.ts$/i,
-        loader: 'babel-loader!ts-loader',   // 处理ts文件 loader 传递loader的名称 ! 代表 多个loader分隔符 简写【猜的。。。】
-      },
-    ],
+        loader: 'babel-loader!ts-loader' // 处理ts文件 loader 传递loader的名称 ! 代表 多个loader分隔符 简写【猜的。。。】
+      }
+    ]
   }
 }
 ```
@@ -123,17 +123,17 @@ module.exports = {
       {
         test: /\.tsx$/i,
         use: [
-          { loader: 'babel-loader' },  // ts 处理完后 交给 babel 编译成 普通 js文件 es5版本(根据babel配置)
+          { loader: 'babel-loader' }, // ts 处理完后 交给 babel 编译成 普通 js文件 es5版本(根据babel配置)
           {
             loader: 'ts-loader',
             options: {
-              appendTsSuffixTo: [/\.vue$/], // 让 ts 支持 .vue 文件处理 敲黑板 这一步不要忘记  场景 .tsx 文件中去引入 .vue组件 引用链接 https://segmentfault.com/a/1190000012024858
-            },
-          },
+              appendTsSuffixTo: [/\.vue$/] // 让 ts 支持 .vue 文件处理 敲黑板 这一步不要忘记  场景 .tsx 文件中去引入 .vue组件 引用链接 https://segmentfault.com/a/1190000012024858
+            }
+          }
         ],
-        exclude: util.resolve('node_modules'),  // 不处理的目录
-      },
-    ],
+        exclude: util.resolve('node_modules') // 不处理的目录
+      }
+    ]
   }
 }
 ```
@@ -154,22 +154,22 @@ module.exports = {
         test: /\.s[ac]ss$/i,
         use: [
           {
-            loader: MiniCssExtractPlugin.loader,  // 导出为.css
+            loader: MiniCssExtractPlugin.loader, // 导出为.css
             options: {
               publicPath: '/',
-              hmr: process.env.NODE_ENV === 'development',  // css 热更新
-            },
+              hmr: process.env.NODE_ENV === 'development' // css 热更新
+            }
           },
           'css-loader',
-          'postcss-loader',   // 帮助自动添加浏览器后缀
+          'postcss-loader', // 帮助自动添加浏览器后缀
           {
             loader: 'sass-loader',
             options: {
-              implementation: require('dart-sass'),   // 默认使用的是 node-sass node-sass 下载巨慢。。。 推荐 dart-sass 下载速度还快 
-            },
-          },
-        ],
-      },
+              implementation: require('dart-sass') // 默认使用的是 node-sass node-sass 下载巨慢。。。 推荐 dart-sass 下载速度还快
+            }
+          }
+        ]
+      }
     ]
   }
 }
@@ -178,41 +178,42 @@ module.exports = {
 ## 最后奉上 最终配置
 
 ```js
-const VueLoaderPlugin = require('vue-loader/lib/plugin');    // vue-loader 的所有插件 处理template .vue专用 插件
-const HtmlWebpackPlugin = require('html-webpack-plugin');    // webpack 加载一个 html 作为 结果展示页
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');   // 压缩js
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');  // 把 css 文件导出到本地
+const VueLoaderPlugin = require('vue-loader/lib/plugin') // vue-loader 的所有插件 处理template .vue专用 插件
+const HtmlWebpackPlugin = require('html-webpack-plugin') // webpack 加载一个 html 作为 结果展示页
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin') // 压缩js
+const MiniCssExtractPlugin = require('mini-css-extract-plugin') // 把 css 文件导出到本地
 
-const util = require('./util');   // 工具包
+const util = require('./util') // 工具包
 
 /**
  * @type {import('webpack').Configuration}
  */
 module.exports = {
-  mode: process.env.NODE_ENV,  // 启用不同类型的 mode 得到的优化效果不一样
-  devtool: 'source-map',  // webpack serve 运行的时候 添加 source-map
-  entry: util.resolve('src/components/main.ts'),   // 入口文件
+  mode: process.env.NODE_ENV, // 启用不同类型的 mode 得到的优化效果不一样
+  devtool: 'source-map', // webpack serve 运行的时候 添加 source-map
+  entry: util.resolve('src/components/main.ts'), // 入口文件
   output: {
-    filename: 'index.js',  // 打包后的文件名
-    path: util.resolve('dist'),   // 输出的目录
-    publicPath: '/',  // 结合 HtmlWebpackPlugin 使用，定义资源基准地址
+    filename: 'index.js', // 打包后的文件名
+    path: util.resolve('dist'), // 输出的目录
+    publicPath: '/', // 结合 HtmlWebpackPlugin 使用，定义资源基准地址
     // chunkFilename: '[id].js',    // 哈希name
-    libraryTarget: 'umd',  // 打包成什么类型模块 如果打包成 common 模块推荐 commonjs2
-    library: 'swiper',  // 对外暴露的模块名称
-    umdNamedDefine: true,  // 如果设置了 libraryTarget： 'umd' 则 需要设置 umdNamedDefine: true
+    libraryTarget: 'umd', // 打包成什么类型模块 如果打包成 common 模块推荐 commonjs2
+    library: 'swiper', // 对外暴露的模块名称
+    umdNamedDefine: true // 如果设置了 libraryTarget： 'umd' 则 需要设置 umdNamedDefine: true
   },
   resolve: {
-    extensions: ['.js', '.vue', '.json', '.ts'],  // 可以被解析的文件
+    extensions: ['.js', '.vue', '.json', '.ts'], // 可以被解析的文件
     alias: {
-      '@': util.resolve('src'), // 别名 tsconfig 也同样需要配置一份  详见  tsconfig `paths`选项
-    },
+      '@': util.resolve('src') // 别名 tsconfig 也同样需要配置一份  详见  tsconfig `paths`选项
+    }
   },
-  externals: [{ vue: 'Vue' }],  // 外部已经有的依赖模块
-  module: {   // loader 执行顺序是 从 右 到 左
+  externals: [{ vue: 'Vue' }], // 外部已经有的依赖模块
+  module: {
+    // loader 执行顺序是 从 右 到 左
     rules: [
       {
         test: /\.ts$/i,
-        loader: 'babel-loader!ts-loader',   // 处理ts文件 loader 传递loader的名称 ! 代表 多个loader分隔符 简写【猜的。。。】
+        loader: 'babel-loader!ts-loader' // 处理ts文件 loader 传递loader的名称 ! 代表 多个loader分隔符 简写【猜的。。。】
       },
       {
         test: /\.tsx$/i,
@@ -221,61 +222,62 @@ module.exports = {
           {
             loader: 'ts-loader',
             options: {
-              appendTsSuffixTo: [/\.vue$/], // 让 ts 支持 .vue 文件处理
-            },
-          },
+              appendTsSuffixTo: [/\.vue$/] // 让 ts 支持 .vue 文件处理
+            }
+          }
         ],
-        exclude: util.resolve('node_modules'),  // 不处理的目录
+        exclude: util.resolve('node_modules') // 不处理的目录
       },
       {
         test: /\.(es6|js|mjs)$/i,
-        include: util.resolve('src'),  // 可以被处理的目录
+        include: util.resolve('src'), // 可以被处理的目录
         exclude: util.resolve('node_modules'),
         use: [
           {
-            loader: 'babel-loader',
-          },
-        ],
+            loader: 'babel-loader'
+          }
+        ]
       },
       {
         test: /\.vue$/i,
-        loader: 'vue-loader',     // .vue 文件 vue-loader 会把他们处理成 .js .css,
-        options: {                // 所以 对 于 这种类型文件 需要 再配置 loader
+        loader: 'vue-loader', // .vue 文件 vue-loader 会把他们处理成 .js .css,
+        options: {
+          // 所以 对 于 这种类型文件 需要 再配置 loader
           loaders: {
             js: 'babel-loader',
             ts: 'babel-loader!ts-loader',
-            tsx: 'babel-loader!ts-loader',   // 好像这个不需要。。。我没试过  .vue || tsx 只能选一个
+            tsx: 'babel-loader!ts-loader' // 好像这个不需要。。。我没试过  .vue || tsx 只能选一个
           },
           compilerOptions: {
-            preserveWhitespace: false, // 放弃模板标签之间的空格 详看 https://vue-loader.vuejs.org/zh/options.html#compiler
-          },
-        },
+            preserveWhitespace: false // 放弃模板标签之间的空格 详看 https://vue-loader.vuejs.org/zh/options.html#compiler
+          }
+        }
       },
       {
         test: /\.css$/,
-        use: ['css-loader'],
+        use: ['css-loader']
       },
       {
         test: /\.s[ac]ss$/i,
         use: [
           {
-            loader: MiniCssExtractPlugin.loader,  // 导出为.css
+            loader: MiniCssExtractPlugin.loader, // 导出为.css
             options: {
               publicPath: '/',
-              hmr: process.env.NODE_ENV === 'development',  // css 热更新
-            },
+              hmr: process.env.NODE_ENV === 'development' // css 热更新
+            }
           },
           'css-loader',
-          'postcss-loader',   // 帮助自动添加浏览器后缀
+          'postcss-loader', // 帮助自动添加浏览器后缀
           {
             loader: 'sass-loader',
             options: {
-              implementation: require('dart-sass'),   // 默认使用的是 node-sass node-sass 下载巨慢。。。 推荐 dart-sass 下载速度还快 
-            },
-          },
-        ],
-      },
-    ],
+              implementation: require('dart-sass') // 默认使用的是 node-sass node-sass 下载巨慢。。。 推荐 dart-sass 下载速度还快
+            }
+          }
+        ]
+      }
+    ]
   },
   plugins: [
     new VueLoaderPlugin(),
@@ -286,21 +288,21 @@ module.exports = {
     new HtmlWebpackPlugin({
       title: 'My App',
       filename: 'index.html',
-      template: util.resolve('public/index.html'),
+      template: util.resolve('public/index.html')
       // inject: 'head',    // 把打包后的资源链接 插入到 HTML那个位置
-    }),
+    })
   ],
-  stats: 'normal',    // 打包控制台输出的信息 类别
+  stats: 'normal', // 打包控制台输出的信息 类别
   optimization: {
     minimizer: [
       new UglifyJsPlugin({
         cache: util.resolve('.cache'),
         parallel: true,
-        sourceMap: true,
-      }),
-    ],
-  },
-};
+        sourceMap: true
+      })
+    ]
+  }
+}
 ```
 
 那么有什么问题 可以留言，请多多指教

@@ -44,9 +44,9 @@ tags: [Vue, 编辑器]
 </template>
 ```
 
-*样式就不贴了，具体看仓库具体代码*
+_样式就不贴了，具体看仓库具体代码_
 
-*这里事件都添加了阻止事件继续冒泡，主要是为了，不跟上面的编辑器产生影响*
+_这里事件都添加了阻止事件继续冒泡，主要是为了，不跟上面的编辑器产生影响_
 
 ## Props
 
@@ -99,7 +99,7 @@ tags: [Vue, 编辑器]
 
 鼠标按下时暂存当前位置，新的位置 - 暂存位置则就是移动的距离
 
-*但是 因为 画布有个 scale 缩放变量，所以 又增加了一点难度。*
+_但是 因为 画布有个 scale 缩放变量，所以 又增加了一点难度。_
 
 ### 公式
 
@@ -210,33 +210,33 @@ const visible = computed({
 
 const { multiple } = useControl()
 /**
-* 指针点击类型 - 控制方向类型/null
-*/
+ * 指针点击类型 - 控制方向类型/null
+ */
 const pointType = ref(null)
 /**
-* 实际显示 定位 & 宽度
-* @type {{x: number, y: number, h: number, w: number}}
-*/
+ * 实际显示 定位 & 宽度
+ * @type {{x: number, y: number, h: number, w: number}}
+ */
 const data = reactive({ x: props.position.x, y: props.position.y, h: props.size.h, w: props.size.w })
 /**
-* 暂存拖动位置 pageX/pageY
-*/
+ * 暂存拖动位置 pageX/pageY
+ */
 const stashPosition = ref(null)
 /**
-* 初始控件大小
-* 每次拖动后需更新此值
-*/
+ * 初始控件大小
+ * 每次拖动后需更新此值
+ */
 const initSize = reactive({ w: 0, h: 0 })
 /**
-* 最小控件大小
-*/
+ * 最小控件大小
+ */
 const miniSize = reactive({ w: 0, h: 0 })
 
 const offset = useBorderSize(vm.stageInstance)
 
 /**
-* @param {PointerEvent} e
-*/
+ * @param {PointerEvent} e
+ */
 const onPointerdown = function (e) {
   const scale = props.scale / 100
 
@@ -252,8 +252,8 @@ const onPointerdown = function (e) {
 }
 
 /**
-* @param {PointerEvent} e
-*/
+ * @param {PointerEvent} e
+ */
 const onPointermove = function (e) {
   if (props.lock) return
   if (stashPosition.value) {
@@ -270,25 +270,25 @@ const onPointermove = function (e) {
     let y = e.pageY - stashPosition.value.y
 
     /**
-    * 左边限制
-    */
+     * 左边限制
+     */
     if (x <= 0) x = 0
 
     /**
-    * 上边限制
-    */
+     * 上边限制
+     */
     if (y <= 0) y = 0
 
     /**
-    * 右边限制
-    */
+     * 右边限制
+     */
     if (x > (vm.stageInstance.$el.clientWidth - initSize.w) * scale) {
       x = (vm.stageInstance.$el.clientWidth - initSize.w) * scale
     }
 
     /**
-    * 下边限制
-    */
+     * 下边限制
+     */
     if (y > (vm.stageInstance.$el.clientHeight - initSize.h) * scale) {
       y = (vm.stageInstance.$el.clientHeight - initSize.h) * scale
     }
@@ -302,8 +302,8 @@ const onPointermove = function (e) {
 }
 
 /**
-* @param {PointerEvent} e
-*/
+ * @param {PointerEvent} e
+ */
 const onPointerup = function (e) {
   if (stashPosition.value) {
     stashPosition.value = null
@@ -317,8 +317,8 @@ const onPointerup = function (e) {
 }
 
 /**
-* @param {PointerEvent} e
-*/
+ * @param {PointerEvent} e
+ */
 const onBodyPointerdown = function (e) {
   visible.value = false
 }

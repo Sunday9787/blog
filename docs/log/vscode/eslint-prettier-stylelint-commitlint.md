@@ -19,7 +19,7 @@ tags: [eslint, prettier, stylelint, commitlint]
 
 .editorconfig 配置
 
-```ini
+```ini [.editorconfig]
 # http://editorconfig.org
 
 # top-most EditorConfig file
@@ -57,19 +57,34 @@ indent_size = 2
 ## 第一步 配置 prettier 格式化规范
 
 1. 安装 prettier
-```bash
+   ::: code-group
+
+```sh [npm]
+npm install prettier -D
+```
+
+```sh [yarn]
+yarn add prettier -D
+```
+
+```sh [pnpm]
 pnpm add prettier -D
 ```
+
+```sh [bun]
+bun add prettier -D
+```
+
+:::
 
 解释
 
 > `prettier` 是自动格式化代码的关键包 格式化不仅限 js ts css html
 
 2. 配置 prettier
-配置双引号还是单引号 需不需要 `;` `,` 号 详细介绍参考[官网](https://prettier.io/docs/en/options.html)
+   配置双引号还是单引号 需不需要 `;` `,` 号 详细介绍参考[官网](https://prettier.io/docs/en/options.html)
 
-```json
-// `.prettierrc`
+```json [.prettierrc]
 {
   "semi": false,
   "tabWidth": 2,
@@ -78,7 +93,7 @@ pnpm add prettier -D
   "singleQuote": true,
   "jsxSingleQuote": true,
   "bracketSpacing": true,
-  "arrowParens":"avoid",
+  "arrowParens": "avoid",
   "htmlWhitespaceSensitivity": "strict",
   "quoteProps": "as-needed",
   "endOfLine": "lf"
@@ -89,9 +104,25 @@ pnpm add prettier -D
 
 1. 安装 eslint
 
-```bash
+::: code-group
+
+```sh [npm]
+npm install eslint eslint-plugin-vue @vue/eslint-config-prettier @vue/eslint-config-standard -D
+```
+
+```sh [yarn]
+yarn add eslint eslint-plugin-vue @vue/eslint-config-prettier @vue/eslint-config-standard -D
+```
+
+```sh [pnpm]
 pnpm add eslint eslint-plugin-vue @vue/eslint-config-prettier @vue/eslint-config-standard -D
 ```
+
+```sh [bun]
+bun add eslint eslint-plugin-vue @vue/eslint-config-prettier @vue/eslint-config-standard -D
+```
+
+:::
 
 解释:
 
@@ -102,8 +133,7 @@ pnpm add eslint eslint-plugin-vue @vue/eslint-config-prettier @vue/eslint-config
 
 2. 配置 eslint
 
-```js
-// `.eslintrc.js`
+```js [.eslintrc.js]
 /**
  * @type {import('eslint').Linter.Config}
  */
@@ -145,9 +175,25 @@ module.exports = {
 
 1. 安装 stylelint
 
-```bash
+::: code-group
+
+```sh [npm]
+npm install stylelint stylelint-config-prettier stylelint-config-recess-order stylelint-config-recommended-vue stylelint-config-standard-scss -D
+```
+
+```sh [yarn]
+yarn add stylelint stylelint-config-prettier stylelint-config-recess-order stylelint-config-recommended-vue stylelint-config-standard-scss -D
+```
+
+```sh [pnpm]
 pnpm add stylelint stylelint-config-prettier stylelint-config-recess-order stylelint-config-recommended-vue stylelint-config-standard-scss -D
 ```
+
+```sh [bun]
+bun add stylelint stylelint-config-prettier stylelint-config-recess-order stylelint-config-recommended-vue stylelint-config-standard-scss -D
+```
+
+:::
 
 **解释:**
 
@@ -160,8 +206,7 @@ pnpm add stylelint stylelint-config-prettier stylelint-config-recess-order style
 
 1. 配置 stylelint
 
-```js
-// `.stylelintrc.js`
+```js [.stylelintrc.js]
 /**
  * @type {import('stylelint').Config}
  */
@@ -179,19 +224,34 @@ module.exports = {
     // 支持小程序 rpx 单位
     'unit-no-unknown': [true, { ignoreUnits: 'rpx' }],
     // 支持自定义标签定义样式
-    'selector-type-no-unknown': [true, { ignore: ["custom-elements", "default-namespace"] }]
+    'selector-type-no-unknown': [true, { ignore: ['custom-elements', 'default-namespace'] }]
   }
 }
-
 ```
 
 ## 第四步 配置 commitlint
 
 1. 安装 commitlint
 
-```bash
+::: code-group
+
+```sh [npm]
+npm install @commitlint/cli @commitlint/config-conventional commitizen cz-conventional-changelog-zh -D
+```
+
+```sh [yarn]
+yarn add @commitlint/cli @commitlint/config-conventional commitizen cz-conventional-changelog-zh -D
+```
+
+```sh [pnpm]
 pnpm add @commitlint/cli @commitlint/config-conventional commitizen cz-conventional-changelog-zh -D
 ```
+
+```sh [bun]
+bun add @commitlint/cli @commitlint/config-conventional commitizen cz-conventional-changelog-zh -D
+```
+
+:::
 
 **解释:**
 
@@ -202,12 +262,9 @@ pnpm add @commitlint/cli @commitlint/config-conventional commitizen cz-conventio
 
 2. 配置 commitlint
 
-```json
-// .commitlintrc
+```json [.commitlintrc]
 {
-  "extends": [
-    "@commitlint/config-conventional"
-  ],
+  "extends": ["@commitlint/config-conventional"],
   "rules": {
     "type-enum": [
       2,
@@ -238,9 +295,25 @@ pnpm add @commitlint/cli @commitlint/config-conventional commitizen cz-conventio
 
 1. 安装 commitizen
 
-```bash
+::: code-group
+
+```sh [npm]
+npm install husky commitizen cz-conventional-changelog-zh -D
+```
+
+```sh [yarn]
+yarn add husky commitizen cz-conventional-changelog-zh -D
+```
+
+```sh [pnpm]
 pnpm add husky commitizen cz-conventional-changelog-zh -D
 ```
+
+```sh [bun]
+bun add husky commitizen cz-conventional-changelog-zh -D
+```
+
+:::
 
 **解释:**
 
@@ -249,8 +322,7 @@ pnpm add husky commitizen cz-conventional-changelog-zh -D
 
 2. 配置 commitizen
 
-```json
-// .czrc
+```json [.czrc]
 {
   "path": "cz-conventional-changelog-zh"
 }
@@ -270,17 +342,32 @@ pnpm add husky commitizen cz-conventional-changelog-zh -D
 
 1. 安装 lint-staged
 
-```bash
+::: code-group
+
+```sh [npm]
+npm install lint-staged -D
+```
+
+```sh [yarn]
+yarn add lint-staged -D
+```
+
+```sh [pnpm]
 pnpm add lint-staged -D
 ```
+
+```sh [bun]
+bun add lint-staged -D
+```
+
+:::
 
 **解释:**
 lint-stage 配合husky使用 仅仅校验 `stage` 区代码
 
 2. 配置 lint-stage
 
-```json
-// .lintstagedrc
+```json [.lintstagedrc]
 {
   "*.{js,jsx,ts,tsx,vue}": ["npm run lint"],
   "*.{css,scss,sass,less,stylus}": ["stylelint --fix"],
@@ -293,9 +380,25 @@ lint-stage 配合husky使用 仅仅校验 `stage` 区代码
 
 1. 安装 husky
 
-```bash
+::: code-group
+
+```sh [npm]
+npm install husky -D
+```
+
+```sh [yarn]
+yarn add husky -D
+```
+
+```sh [pnpm]
 pnpm add husky -D
 ```
+
+```sh [bun]
+bun add husky -D
+```
+
+:::
 
 2. 在 package.json中添加 prepare 脚本
 

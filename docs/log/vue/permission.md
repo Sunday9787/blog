@@ -38,24 +38,22 @@ tags: [权限, 中后台]
 
 技术细节：
 
-```text
-logIn=>start: 用户登录
-logOut=>operation: 用户登出
-hasPermissionData=>condition: 是否已获取权限配置
-permission=>condition: 获取权限配置
+```mermaid
+graph TD
+  logIn(["用户登录"])
+  logOut(["用户登出"])
+  hasPermissionData{"是否已获取权限配置"}
+  permission{"获取权限配置"}
+  route["生成路由"]
+  view["页面"]
+  endNode(["结束"])
 
-route=>operation: 生成路由
-view=>operation: 页面
-end=>end: 结束
-
-logIn->hasPermissionData
-hasPermissionData(yes,bottom)->route
-hasPermissionData(no)->permission
-
-permission(yes,bottom)->route
-permission(no)->end
-
-route->view->logOut->end
+  logIn --> hasPermissionData
+  hasPermissionData -->|yes| route
+  hasPermissionData -->|no| permission
+  permission -->|yes| route
+  permission -->|no| endNode
+  route --> view --> logOut --> endNode
 ```
 
 首先
@@ -64,79 +62,79 @@ route->view->logOut->end
 
 路由书写不能像官网示例那样 一个一个 import('xxx')，需要动态遍历组合生成路由
 
-*仅供参考:*
+_仅供参考:_
 
 ```ts
 /* 权限数据结构 */
 interface Permission {
-    id: number
-    parentId: number | null
-    path: string
-    name: string
-    /**
-     * 组件名称
-     * 组件具体的路径
-     * @example `component = 'product/detail.vue'` `src/views/${component}`
-     */
-    component: string
+  id: number
+  parentId: number | null
+  path: string
+  name: string
+  /**
+   * 组件名称
+   * 组件具体的路径
+   * @example `component = 'product/detail.vue'` `src/views/${component}`
+   */
+  component: string
 }
 
 interface PermissionRoute {
-    id: number
-    parentId: number | null
-    parentName?: string
-    route: RouteRecordRaw
+  id: number
+  parentId: number | null
+  parentName?: string
+  route: RouteRecordRaw
 }
 
-const permissionMap = new Map<number, Permission>(permission.map((item) => [item.id, item]))
+const permissionMap = new Map<number, Permission>(permission.map(item => [item.id, item]))
 
 function createRoute(permission: Permission) {
-     const asyncRoute: PermissionRoute = {
-         id: item.id,
-         parentId: item.parentId,
-         parentName: permissionMap.get(item.id)?.name,
-         route: {
-             name: item.name,
-             redirect: item.redirect,
-             path: item.path,
-             component: () => import(`@/views/${item.component}`)
-         }
-     }
+  const asyncRoute: PermissionRoute = {
+    id: item.id,
+    parentId: item.parentId,
+    parentName: permissionMap.get(item.id)?.name,
+    route: {
+      name: item.name,
+      redirect: item.redirect,
+      path: item.path,
+      component: () => import(`@/views/${item.component}`)
+    }
+  }
 
-     return asyncRoute
+  return asyncRoute
 }
 
 const routers = [
-     { path: '/403', name: 'Qianli403', meta: { hidden: true }, props: { status: 403 }, component: ErrorView },
-     { path: '/404', name: 'Qianli404', meta: { hidden: true }, props: { status: 404 }, component: ErrorView },
-     { path: '/:catchAll(.*)', redirect: '/404', meta: { hidden: true } }
+  { path: '/403', name: 'Qianli403', meta: { hidden: true }, props: { status: 403 }, component: ErrorView },
+  { path: '/404', name: 'Qianli404', meta: { hidden: true }, props: { status: 404 }, component: ErrorView },
+  { path: '/:catchAll(.*)', redirect: '/404', meta: { hidden: true } }
 ]
 
 function generateRoute(permission: Permission[], router: Router) {
-    const asyncRouters = permission.map(createRoute)
+  const asyncRouters = permission.map(createRoute)
 
-    for (asyncRoute of asyncRouters) {
-         router.addRoute(asyncRoute.parentName, asyncRoute.route)
-    }
+  for (asyncRoute of asyncRouters) {
+    router.addRoute(asyncRoute.parentName, asyncRoute.route)
+  }
 
-    for (route of routers) {
-         router.addRoute(route)
-    }
+  for (route of routers) {
+    router.addRoute(route)
+  }
 }
 
 const router = createRouter({
-     history: createWebHistory(import.meta.env.BASE_URL),
-     routes: [
-         { path: '/', name: 'QianliRoot', meta: { hidden: true }, redirect: '/dashboard/workplace' },
-         {
-             path: '/login',
-             name: 'QianliLogin',
-             meta: { hidden: true, title: '登录' },
-             props: route => ({ redirect: route.query.redirect }),
-             component: () => import('@/views/login/index.vue')
-         }
-     ]
- })
+  history: createWebHistory(import.meta.env.BASE_URL),
+  routes: [
+    { path: '/', name: 'QianliRoot', meta: { hidden: true }, redirect: '/dashboard/workplace' },
+    {
+      path: '/login',
+      name: 'QianliLogin',
+      meta: { hidden: true, title: '登录' },
+      props: route => ({ redirect: route.query.redirect }),
+      component: () => import('@/views/login/index.vue')
+    }
+  ]
+})
 ```
 
 其次
@@ -145,13 +143,9 @@ props 问题：
 
 我们可以看到 ，手动组合 route 配置，且 props 没办法 手动指定，只能 props: true，这样是能解决问题 但是，对于一个健壮的项目来讲 这种 是不可取的
 
-
-
 再者 meta 问题：
 
 meta 通常会存一些跟页面相关的数据，难道这部分数据也要配置在后台？
-
-
 
 解决办法：
 
@@ -160,11 +154,11 @@ meta 通常会存一些跟页面相关的数据，难道这部分数据也要配
 但是挺费劲的
 
 ```ts
-type RouteConfig = Omit<RouteRecordRaw,'component'|'path'|'name'>
+type RouteConfig = Omit<RouteRecordRaw, 'component' | 'path' | 'name'>
 
 const route = {
-    props: (route) => ({id: route.query.id}),
-    meta: {title: 'xxxx'}
+  props: route => ({ id: route.query.id }),
+  meta: { title: 'xxxx' }
 }
 
 export default route
@@ -174,9 +168,9 @@ export default route
 
 ```ts
 interface PermissionMenu {
-    title: string
-    path: string
-    children: PermissionMenu[]
+  title: string
+  path: string
+  children: PermissionMenu[]
 }
 ```
 
@@ -208,37 +202,35 @@ prefix->模块->页面->按钮功能
 
 #### 技术细节
 
-```text
-logIn=>start: 用户登录
-logOut=>operation: 用户登出
-hasPermissionData=>condition: 是否已获取权限配置
-permission=>condition: 获取权限配置
-route=>operation: 路由拦截（beforeEach）
-hasPermission=>condition: 是否有权限
+```mermaid
+graph TD
+  logIn(["用户登录"])
+  logOut(["用户登出"])
+  hasPermissionData{"是否已获取权限配置"}
+  permission{"获取权限配置"}
+  route["路由拦截（beforeEach）"]
+  hasPermission{"是否有权限"}
+  view["页面"]
+  view403["重定向403页面"]
+  endNode(["结束"])
 
-view=>operation: 页面
-view403=>operation: 重定向403页面
-end=>end: 结束
-
-logIn->hasPermissionData
-hasPermissionData(yes,bottom)->route
-hasPermissionData(no)->permission
-
-permission(yes,bottom)->route
-permission(no)->end
-
-route->hasPermission(yes,bottom)->view
-route->hasPermission(no,right)->view403
-
-view->logOut->end
-view403->end
+  logIn --> hasPermissionData
+  hasPermissionData -->|yes| route
+  hasPermissionData -->|no| permission
+  permission -->|yes| route
+  permission -->|no| endNode
+  route --> hasPermission
+  hasPermission -->|yes| view
+  hasPermission -->|no| view403
+  view --> logOut --> endNode
+  view403 --> endNode
 ```
 
 首先
 
 路由配置 官网示例怎么写就怎么写即可，不需要动态生成 router 配置
 
-*仅供参考:*
+_仅供参考:_
 
 ```ts
 // ./modules/user.ts
@@ -304,8 +296,6 @@ const router = createRouter({
 
 export default router
 ```
-
-
 
 其次
 
@@ -402,6 +392,4 @@ router.beforeEach(async (to, _, next) => {
 
 实现过程不复杂，简单、直接，主要在 router 拦截稍微绕了点总体还好 **强烈推荐**采用此方式
 
-
-
-[^vue-router4]:[vue-router4](https://router.vuejs.org/zh/api/interfaces/RouterOptions.html#Properties-routes)
+[^vue-router4]: [vue-router4](https://router.vuejs.org/zh/api/interfaces/RouterOptions.html#Properties-routes)
