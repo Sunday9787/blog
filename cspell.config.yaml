@@ -3,9 +3,17 @@ ignorePaths: []
 dictionaryDefinitions: []
 dictionaries: []
 words:
+  - aliyun
+  - bilkent
+  - braintree
+  - cose
+  - cytoscape
   - giscus
+  - llms
+  - llmstxt
+  - markline
+  - peaceiris
   - teek
   - vitepress-theme-teek
-  - peaceiris
 ignoreWords: []
 import: []
