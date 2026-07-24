@@ -5,7 +5,9 @@
   --vp-c-brand-3: #3eaf7c;
   --vp-c-brand-soft: #fb9b5f;
 
-  --vp-font-family-base: 'Georgia', -apple-system, 'Nimbus Roman No9 L', 'PingFang SC', 'Hiragino Sans GB', 'Noto Serif SC', 'Microsoft Yahei', 'WenQuanYi Micro Hei', 'ST Heiti', sans-serif;
+  --vp-font-family-base:
+    'Georgia', -apple-system, 'Nimbus Roman No9 L', 'PingFang SC', 'Hiragino Sans GB', 'Noto Serif SC',
+    'Microsoft Yahei', 'WenQuanYi Micro Hei', 'ST Heiti', sans-serif;
 }
 
 /* ========== 摄影页 - 瀑布流 ========== */
@@ -36,11 +38,17 @@
 }
 
 @media screen and (max-width: 1250px) {
-  .photography .photo-grid { column-count: 3; }
+  .photography .photo-grid {
+    column-count: 3;
+  }
 }
 @media screen and (max-width: 997px) {
-  .photography .photo-grid { column-count: 2; }
+  .photography .photo-grid {
+    column-count: 2;
+  }
 }
 @media screen and (max-width: 680px) {
-  .photography .photo-grid { column-count: 1; }
+  .photography .photo-grid {
+    column-count: 1;
+  }
 }
