@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>代先生 - 前端开发工程师</title>
+  <style>
+    :root {
+      --color-bg: #F8FAFC;
+      --color-text-primary: #1E293B;
+      --color-text-secondary: #64748B;
+      --color-text-heading: #0F172A;
+      --color-border: #E2E8F0;
+      --color-accent: #3B82F6;
+      --color-link: #2563EB;
+      --color-card-bg: #FFFFFF;
+      --color-shadow: rgba(0, 0, 0, 0.06);
+      --color-skill-level-bg: #F1F5F9;
+
+      --color-header-bg: #1E2A4A;
+      --color-header-text: #fff;
+      --color-header-text-secondary: rgba(255, 255, 255, 0.7);
+      --color-header-text-tertiary: rgba(255, 255, 255, 0.6);
+      --color-header-text-muted: rgba(255, 255, 255, 0.75);
+      --color-header-icon: rgba(255, 255, 255, 0.55);
+      --color-header-border: rgba(255, 255, 255, 0.1);
+      --color-header-avatar-border: rgba(255, 255, 255, 0.2);
+      --color-header-link: #64B5F6;
+      --color-header-link-hover: #90CAF9;
+    }
+
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    ul, ol {
+      list-style: none;
+    }
+
+    body {
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans SC", sans-serif;
+      background-color: var(--color-bg);
+      color: var(--color-text-primary);
+      line-height: 1.6;
+      padding: 32px 16px;
+    }
+
+    .resume {
+      max-width: 960px;
+      margin: 0 auto;
+      background: var(--color-card-bg);
+      border-radius: 12px;
+      box-shadow: 0 4px 24px var(--color-shadow);
+      overflow: hidden;
+    }
+
+    /* ========== Header ========== */
+    .header {
+      background: var(--color-header-bg);
+      color: var(--color-header-text);
+      padding: 40px 40px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 24px;
+    }
+
+    .header-left {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .header-avatar {
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      border: 3px solid var(--color-header-avatar-border);
+      flex-shrink: 0;
+      overflow: hidden;
+      margin-top: 4px;
+    }
+
+    .header-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .header h1 {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .header .title {
+      font-size: 15px;
+      font-weight: 400;
+      color: var(--color-header-text-secondary);
+      margin-top: 4px;
+      letter-spacing: 0.01em;
+    }
+
+    .header .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 20px;
+      margin-top: 12px;
+      font-size: 13px;
+      color: var(--color-header-text-tertiary);
+    }
+
+    .header .meta-sep {
+      opacity: 0.35;
+    }
+
+    .header .contact {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px 28px;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--color-header-border);
+      font-style: normal;
+    }
+
+    .header .contact-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--color-header-text-muted);
+    }
+
+    .header .contact-item .icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    .header .contact-item .icon svg {
+      width: 14px;
+      height: 14px;
+      fill: none;
+      stroke: var(--color-header-icon);
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .header .contact-item .icon.icon-fill svg {
+      fill: var(--color-header-icon);
+      stroke: none;
+    }
+
+    .header .contact-item .icon img {
+      width: 14px;
+      height: 14px;
+      border-radius: 2px;
+      display: block;
+    }
+
+    .header .contact-item a {
+      color: var(--color-header-link);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .header .contact-item a:hover {
+      color: var(--color-header-link-hover);
+    }
+
+    /* ========== Section ========== */
+    .section {
+      padding: 28px 40px;
+    }
+
+    .section-title {
+      font-size: 24px;
+      font-weight: 600;
+            color: var(--color-text-heading);
+      letter-spacing: 0.02em;
+      margin-bottom: 16px;
+      padding-left: 16px;
+      position: relative;
+    }
+
+    .section-title::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 8px;
+      width: 4px;
+      height: 20px;
+      border-radius: 2px;
+      background: var(--color-accent);
+    }
+
+    .section-title::after {
+      content: '';
+      display: block;
+      width: 100%;
+      height: 1px;
+      background: var(--color-border);
+      margin-top: 10px;
+    }
+
+    /* ========== Summary ========== */
+    .summary ul {
+      padding-left: 0;
+      list-style: none;
+    }
+
+    .summary ul li {
+      font-size: 14px;
+      line-height: 1.8;
+      position: relative;
+      padding-left: 16px;
+      margin-bottom: 3px;
+    }
+
+    .summary ul li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 11px;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--color-accent);
+    }
+
+    /* ========== Intention ========== */
+    .intention-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 24px;
+      font-size: 14px;
+      color: var(--color-text-primary);
+    }
+
+    .intention-grid li:not(:first-child)::before {
+      content: '·';
+      color: var(--color-text-secondary);
+      opacity: 0.4;
+      margin-right: 24px;
+    }
+
+    /* ========== Skills ========== */
+    .skill-groups {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .skill-group-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-text-heading);
+      margin-bottom: 8px;
+      padding-left: 10px;
+      position: relative;
+    }
+
+    .skill-group-title::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 4px;
+      width: 3px;
+      height: 14px;
+      border-radius: 2px;
+      background: var(--color-accent);
+    }
+
+    .skill-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .skill-tag {
+      font-size: 13px;
+      color: var(--color-text-primary);
+      background: var(--color-skill-level-bg);
+      padding: 4px 12px;
+      border-radius: 4px;
+      line-height: 1.5;
+    }
+
+    /* ========== Experience / Project ========== */
+    .entry {
+      margin-bottom: 22px;
+    }
+
+    .entry:last-child {
+      margin-bottom: 0;
+    }
+
+    .entry-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 4px 12px;
+    }
+
+    .entry-header .entry-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--color-text-primary);
+    }
+
+    .entry-header .entry-date {
+      font-size: 13px;
+      color: var(--color-text-secondary);
+      white-space: nowrap;
+    }
+
+    .entry-sub {
+      font-size: 13px;
+      color: var(--color-text-secondary);
+      margin-top: 2px;
+    }
+
+    .entry-tech {
+      margin-top: 8px;
+      font-size: 13px;
+      color: var(--color-text-secondary);
+    }
+
+    .entry-highlights {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .entry-highlight-tag {
+      font-size: 11px;
+      font-weight: 500;
+      color: #8B5CF6;
+      background: rgba(139, 92, 246, 0.08);
+      padding: 2px 10px;
+      border-radius: 3px;
+      line-height: 1.8;
+    }
+
+    .entry-desc {
+      margin-top: 8px;
+      padding-left: 0;
+      list-style: none;
+    }
+
+    .entry-desc li {
+      font-size: 14px;
+      line-height: 1.7;
+      position: relative;
+      padding-left: 14px;
+      margin-bottom: 4px;
+    }
+
+    .entry-desc li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 10px;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--color-accent);
+    }
+
+    /* ========== Portfolio ========== */
+    .portfolio-items {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .portfolio-item {
+      font-size: 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .portfolio-item .icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+    }
+
+    .portfolio-item .icon svg {
+      width: 13px;
+      height: 13px;
+      fill: none;
+      stroke: var(--color-text-secondary);
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .portfolio-item a {
+      color: var(--color-link);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .portfolio-item a:hover {
+      text-decoration: underline;
+    }
+
+    .portfolio-item .portfolio-desc {
+      color: var(--color-text-secondary);
+    }
+
+    .portfolio-item .portfolio-url {
+      width: 100%;
+      font-size: 12px;
+      color: var(--color-text-secondary);
+      word-break: break-all;
+    }
+
+    .portfolio-item .portfolio-url a {
+      color: var(--color-text-secondary);
+      font-weight: 400;
+      text-decoration: none;
+    }
+
+    .portfolio-item .portfolio-url a:hover {
+      color: var(--color-link);
+    }
+
+    /* ========== Education ========== */
+    .edu-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 4px 12px;
+    }
+
+    .edu-row .edu-school {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--color-text-primary);
+    }
+
+    .edu-row .edu-major {
+      font-size: 14px;
+      color: var(--color-text-primary);
+    }
+
+    .edu-row .edu-date {
+      font-size: 13px;
+      color: var(--color-text-secondary);
+      white-space: nowrap;
+    }
+
+    /* ========== Responsive ========== */
+    @media (max-width: 767px) {
+      body {
+        padding: 0;
+      }
+
+      .resume {
+        border-radius: 0;
+        box-shadow: none;
+      }
+
+      .header {
+        padding: 28px 20px 24px;
+        gap: 16px;
+      }
+
+      .header-avatar {
+        width: 72px;
+        height: 72px;
+        align-self: flex-start;
+      }
+
+      .header h1 {
+        font-size: 24px;
+      }
+
+      .section {
+        padding: 20px;
+      }
+
+      .entry-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .edu-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    @media print {
+      @page {
+        margin: 12mm 15mm;
+      }
+
+      body {
+        background: var(--color-card-bg);
+        padding: 0;
+        font-size: 12px;
+      }
+
+      .resume {
+        max-width: 100%;
+        box-shadow: none;
+        border-radius: 0;
+      }
+
+      .header {
+        padding: 24px 32px 20px;
+        break-inside: avoid;
+        flex-direction: row;
+        align-items: flex-start;
+      }
+
+      .header-avatar {
+        align-self: flex-start;
+      }
+
+      .header h1 {
+        font-size: 24px;
+      }
+
+      .section {
+        padding: 16px 32px;
+        page-break-inside: auto;
+      }
+
+      .section-title {
+        font-size: 18px;
+        margin-bottom: 10px;
+      }
+
+      .section-title::after {
+        margin-top: 6px;
+      }
+
+      .entry {
+        break-inside: avoid;
+        margin-bottom: 14px;
+      }
+
+      .entry-desc li {
+        font-size: 12px;
+        line-height: 1.5;
+      }
+
+      .entry-highlight-tag {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .summary ul li {
+        font-size: 12px;
+        line-height: 1.5;
+      }
+
+      .intention-grid {
+        font-size: 12px;
+        gap: 4px 16px;
+      }
+
+      .portfolio-item {
+        font-size: 12px;
+      }
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/art-template@4.13.4/index.min.js"></script>
+</head>
+<body>
+  <main class="resume">
+    <!-- ====== Header ====== -->
+    <header class="header">
+      <div class="header-left">
+        <h1>代先生</h1>
+        <p class="title">前端开发工程师</p>
+        <ul class="meta">
+          <li>男<span class="meta-sep"> · </span>30 岁</li>
+          <li>大专</li>
+          <li>在职-观望机会</li>
+          <li>杭州-余杭区</li>
+        </ul>
+        <address class="contact">
+          <span class="contact-item">
+            <span class="icon">
+              <svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 4L12 13 2 4"/></svg>
+            </span>
+            <a href="mailto:daishixiang70@163.com">daishixiang70@163.com</a>
+          </span>
+          <span class="contact-item">
+            <span class="icon">
+              <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.362 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+            </span>
+            <a href="tel:17682311696">176-8231-1696</a>
+          </span>
+          <span class="contact-item">
+            <span class="icon icon-fill">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+            </span>
+            <a href="https://github.com/Sunday9787" target="_blank">github.com/Sunday9787</a>
+          </span>
+          <span class="contact-item">
+            <span class="icon">
+              <img src="https://static-1256180570.cos.ap-nanjing.myqcloud.com/image/20500528.jpg" alt="blog" />
+            </span>
+            <a href="https://sunday90.com" target="_blank">sunday90.com</a>
+          </span>
+        </div>
+      </div>
+      <div class="header-avatar">
+        <img src="https://img.bosszhipin.com/beijin/upload/avatar/20220531/607f1f3d68754fd0b6b6ec5bc8d93a2adc14d20b1edf1f643c8c320faa77b0f351feae4c790f5359_s.jpg" alt="avatar" />
+      </div>
+    </header>
+
+    <!-- ====== Professional Summary ====== -->
+    <section class="section">
+      <h2 class="section-title">个人优势</h2>
+      <div class="summary">
+        <ul>
+          <li>拥有近 9 年前端开发经验（2017 年 5 月入行），具备从需求分析、技术选型、架构设计到项目落地的完整交付能力。</li>
+          <li>熟练掌握 Vue2/3、TypeScript、ES6+，具备复杂业务系统（管理后台 / 可视化平台 / 桌面端 / 跨端应用）开发经验。</li>
+          <li>具备完善前端工程化实践经验，熟悉 Webpack / Vite / Rollup / Rsbuild 构建体系，能够进行项目性能优化、构建效率优化及工程架构设计。</li>
+          <li>具备 Node.js（NestJS）开发经验，能够独立完成后端接口设计、联调及部署流程。</li>
+          <li>多次主导核心模块设计与项目架构搭建，具备复杂业务拆解与技术方案设计能力，曾承担项目负责人角色，主导需求评审、任务拆解、进度把控及跨部门协同，保障项目高质量交付。</li>
+          <li>关注性能优化、用户体验与代码可维护性，具备较强的工程意识与产品理解能力。</li>
+          <li>有开源贡献经验，曾参与 Vue Baidu Map 等开源项目优化与 PR 提交。</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ====== Job Intention ====== -->
+    <section class="section">
+      <h2 class="section-title">求职意向</h2>
+      <ul class="intention-grid">
+        <li>前端开发</li>
+        <li>全职</li>
+        <li>1.8万 - 2.5万 × 14薪</li>
+        <li>杭州</li>
+      </ul>
+    </section>
+
+    <!-- ====== Skills ====== -->
+    <section class="section">
+      <h2 class="section-title">专业技能</h2>
+      <div class="skill-groups">
+        <div class="skill-group">
+          <h3 class="skill-group-title">核心技术</h3>
+          <ul class="skill-tags">
+            <li class="skill-tag">Vue2 / Vue3</li>
+            <li class="skill-tag">TypeScript</li>
+            <li class="skill-tag">JavaScript（ES6+）</li>
+            <li class="skill-tag">Pinia</li>
+            <li class="skill-tag">Vue Router</li>
+          </ul>
+        </div>
+        <div class="skill-group">
+          <h3 class="skill-group-title">工程化</h3>
+          <ul class="skill-tags">
+            <li class="skill-tag">Webpack</li>
+            <li class="skill-tag">Vite</li>
+            <li class="skill-tag">Rsbuild</li>
+            <li class="skill-tag">Rollup</li>
+            <li class="skill-tag">ESLint</li>
+            <li class="skill-tag">GitHub Actions</li>
+          </ul>
+        </div>
+        <div class="skill-group">
+          <h3 class="skill-group-title">后端能力</h3>
+          <ul class="skill-tags">
+            <li class="skill-tag">Node.js</li>
+            <li class="skill-tag">NestJS</li>
+            <li class="skill-tag">Redis</li>
+            <li class="skill-tag">MySQL</li>
+          </ul>
+        </div>
+        <div class="skill-group">
+          <h3 class="skill-group-title">客户端</h3>
+          <ul class="skill-tags">
+            <li class="skill-tag">Electron</li>
+          </ul>
+        </div>
+        <div class="skill-group">
+          <h3 class="skill-group-title">其他</h3>
+          <ul class="skill-tags">
+            <li class="skill-tag">Nuxt3</li>
+            <li class="skill-tag">TailwindCSS</li>
+            <li class="skill-tag">ECharts</li>
+            <li class="skill-tag">PixiJS</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== Work Experience ====== -->
+    <section class="section">
+      <h2 class="section-title">工作经历</h2>
+
+      <article class="entry">
+        <header class="entry-header">
+          <h3 class="entry-name">杭州小砖块网络科技有限公司</h3>
+          <time class="entry-date">2025.08 - 至今</time>
+        </header>
+        <div class="entry-sub">高级前端开发工程师 / 项目负责人 · 智能招聘与运营管理平台</div>
+        <ul class="entry-desc">
+          <li>主导智能招聘系统核心模块开发，包括 AI 智能体交互、职位管理及实时数据展示等功能。</li>
+          <li>主导运营中台前端架构设计，搭建工程体系、建设公共能力及制定研发规范。</li>
+          <li>担任项目负责人，主导需求评审、任务拆解、进度管理及跨团队协作。</li>
+        </ul>
+      </article>
+
+      <article class="entry">
+        <header class="entry-header">
+          <h3 class="entry-name">浙江祺跃科技有限公司</h3>
+          <time class="entry-date">2023.10 - 2024.11</time>
+        </header>
+        <div class="entry-sub">高级 Web 前端开发工程师 · 官网 CMS 系统独立全栈开发</div>
+        <ul class="entry-desc">
+          <li>独立完成公司官网 CMS 系统全栈开发，完成从设计、开发到部署上线的完整交付。</li>
+          <li>设计内容管理、用户权限及运营支撑体系，保障官网动态化运营。</li>
+          <li>参与数据库设计与架构优化，提升系统扩展性与维护性。</li>
+        </ul>
+      </article>
+
+      <article class="entry">
+        <header class="entry-header">
+          <h3 class="entry-name">杭州德适生物科技有限公司</h3>
+          <time class="entry-date">2022.06 - 2023.01</time>
+        </header>
+        <div class="entry-sub">前端开发 · 医疗数据平台</div>
+        <ul class="entry-desc">
+          <li>主导 Online 项目迭代开发及 Electron 客户端重构，保障系统稳定运行。</li>
+          <li>主导公共模块设计与架构优化，提升代码复用率和团队开发效率。</li>
+          <li>推动开发流程改进，提高项目交付质量和协作效率。</li>
+        </ul>
+      </article>
+
+      <article class="entry">
+        <header class="entry-header">
+          <h3 class="entry-name">杭州巨玩科技有限公司</h3>
+          <time class="entry-date">2020.07 - 2022.05</time>
+        </header>
+        <div class="entry-sub">前端主程 · 游戏供应链与 ERP 系统</div>
+        <ul class="entry-desc">
+          <li>担任前端主程，主导系统架构设计与开发规范制定。</li>
+          <li>主导供应链管理及 ERP 核心业务模块开发，保障系统高效稳定。</li>
+          <li>推动公共能力建设与技术攻关，提升团队工程质量。</li>
+        </ul>
+      </article>
+
+      <article class="entry">
+        <header class="entry-header">
+          <h3 class="entry-name">杭州饭团科技有限公司</h3>
+          <time class="entry-date">2018.06 - 2020.07</time>
+        </header>
+        <div class="entry-sub">前端开发 · 金融服务中台</div>
+        <ul class="entry-desc">
+          <li>独立承担金融服务中台前端开发，基于 Jenkins 实现 CI/CD 自动化部署。</li>
+        </ul>
+      </article>
+
+      <article class="entry">
+        <header class="entry-header">
+          <h3 class="entry-name">博库网络有限公司</h3>
+          <time class="entry-date">2017.05 - 2018.05</time>
+        </header>
+        <div class="entry-sub">前端开发 · 图书电商平台</div>
+        <ul class="entry-desc">
+          <li>参与博库网新版重构，负责关键模块开发及运营活动功能。</li>
+        </ul>
+      </article>
+    </section>
+
+    <!-- ====== Projects ====== -->
+    <section class="section">
+      <h2 class="section-title">项目经历</h2>
+
+      <article class="entry">
+        <header class="entry-header">
+          <h3 class="entry-name">小砖块-运营中台</h3>
+          <time class="entry-date">2026.01 - 至今</time>
+        </header>
+        <div class="entry-sub">项目架构师 · 快结荐业务运营管理平台</div>
+        <ul class="entry-desc">
+          <li>主导项目整体架构设计，基于 Vue3 + TypeScript + class-transformer 构建 Entity + Service 分层架构，统一业务模型、数据访问与状态管理，实现视图与业务逻辑解耦，提升了项目可维护性。</li>
+          <li>设计并实现页面与数据权限体系，统一权限模型覆盖全部后台业务，减少权限相关重复开发。</li>
+          <li>封装十余个公共组件及通用 Hooks，减少重复开发，提升新页面开发效率约 40%。</li>
+          <li>基于 Rsbuild 搭建前端工程，集成自动导入与 ESLint/Stylelint/Commitizen 等研发规范，降低团队协作成本，提升开发体验。</li>
+          <li>设计并实现版本升级提示模块，通过比对新旧 Commit Hash 判断版本变化，引导用户刷新获取最新资源，确保功能及时更新。</li>
+        </ul>
+        <p class="entry-tech">Vue3 · TypeScript · Pinia · Axios · VueUse · class-transformer · Rsbuild · Ant Design Vue · Tailwind CSS</p>
+        <ul class="entry-highlights">
+          <li class="entry-highlight-tag">Entity + Service 分层架构</li>
+          <li class="entry-highlight-tag">class-transformer</li>
+          <li class="entry-highlight-tag">权限体系</li>
+          <li class="entry-highlight-tag">自动导入</li>
+          <li class="entry-highlight-tag">Commit Hash 热更新</li>
+          <li class="entry-highlight-tag">通用 Hooks</li>
+        </ul>
+      </article>
+
+      <article class="entry">
+        <header class="entry-header">
+          <h3 class="entry-name">1号直聘</h3>
+          <time class="entry-date">2025.09 - 2025.12</time>
+        </header>
+        <div class="entry-sub">前端开发工程师 · 招聘平台首页升级改造</div>
+        <ul class="entry-desc">
+          <li>主导首页智能体模块开发，实现多智能体形象切换与状态管理，并预留 AI 对话能力扩展接口，支持后续智能体迭代接入。</li>
+          <li>主导职位数据展示模块开发，基于 SSE（Server-Sent Events）实现职位数据实时推送与更新，保障多智能体场景下数据实时同步一致性。</li>
+          <li>实现职位报名动态掉落动画效果，用户报名后触发职位卡片滚动掉落动画，增强首页互动体验与用户参与感。</li>
+          <li>开发全局职位发布拦截机制，对异常或违规发布行为进行前置校验，保障业务流程规范，降低异常发布风险。</li>
+        </ul>
+        <p class="entry-tech">Vue2 · Vue Router · Vuex · Axios · Less · AntV</p>
+        <ul class="entry-highlights">
+          <li class="entry-highlight-tag">SSE 实时推送</li>
+          <li class="entry-highlight-tag">AI 智能体</li>
+          <li class="entry-highlight-tag">掉落动画</li>
+          <li class="entry-highlight-tag">前置校验</li>
+          <li class="entry-highlight-tag">多智能体状态管理</li>
+        </ul>
+      </article>
+
+      <article class="entry">
+        <header class="entry-header">
+          <h3 class="entry-name">企业官网及后台管理系统（独立全栈开发）</h3>
+          <time class="entry-date">2024.03 - 2024.05</time>
+        </header>
+        <div class="entry-sub">独立全栈开发 · 企业官网 CMS 系统</div>
+        <ul class="entry-desc">
+          <li>独立完成系统整体架构设计，包括前后端技术选型、模块划分、数据库设计及接口规范制定。</li>
+          <li>基于 NestJS 搭建后端服务架构，封装通用 CRUD 与业务模块解耦设计。</li>
+          <li>引入 Redis 实现缓存机制与基础接口限流策略，提升高频接口访问性能与系统稳定性。</li>
+          <li>设计 MySQL 表结构与索引优化方案，针对列表查询与筛选场景进行性能优化。</li>
+          <li>集成阿里云 OSS，实现图片/文件上传、CDN 分发与资源管理。</li>
+          <li>完成完整鉴权体系设计（JWT + 权限控制），支持后台用户角色与权限管理。</li>
+          <li>前端基于 Nuxt3 实现 SSR 架构优化 SEO 表现，使用 TailwindCSS 进行组件级样式开发。</li>
+          <li>完成项目部署与运维，基于 Nginx + PM2 实现服务代理、进程守护与线上稳定运行。</li>
+        </ul>
+        <p class="entry-tech">Nuxt3 · NestJS · TypeScript · MySQL · Redis · TailwindCSS · Nginx · PM2</p>
+        <ul class="entry-highlights">
+          <li class="entry-highlight-tag">Nuxt3 SSR</li>
+          <li class="entry-highlight-tag">NestJS</li>
+          <li class="entry-highlight-tag">JWT 鉴权</li>
+          <li class="entry-highlight-tag">Redis 缓存</li>
+          <li class="entry-highlight-tag">Nginx + PM2</li>
+          <li class="entry-highlight-tag">CRUD 通用封装</li>
+        </ul>
+      </article>
+
+      <article class="entry">
+        <header class="entry-header">
+          <h3 class="entry-name">自定义模板编辑器</h3>
+          <time class="entry-date">2022.12 - 2023.07</time>
+        </header>
+        <div class="entry-sub">基于 Schema 驱动的可视化拖拽编辑系统</div>
+        <ul class="entry-desc">
+          <li>独立完成从架构设计、核心模块拆解、组件封装到交互实现的完整开发流程。</li>
+          <li>设计基于 Schema 驱动的组件模型体系，实现"数据驱动视图渲染"，支持动态组件扩展。</li>
+          <li>构建画布编辑系统，实现拖拽、选中、移动与缩放交互，提升模板编辑效率与体验。</li>
+          <li>设计基于碰撞检测的对齐辅助系统，实现智能参考线提示，组件对齐精度显著提升。</li>
+          <li>实现基于栈结构的历史记录系统（撤销/重做），支持操作快照回溯，用户编辑操作可无限回退。</li>
+          <li>设计属性面板与画布数据双向绑定机制，实现组件属性的实时响应式更新。</li>
+        </ul>
+        <p class="entry-tech">Vue 2 · Composition API · Element UI · SCSS</p>
+        <ul class="entry-highlights">
+          <li class="entry-highlight-tag">Schema 驱动</li>
+          <li class="entry-highlight-tag">拖拽交互</li>
+          <li class="entry-highlight-tag">撤销 / 重做</li>
+          <li class="entry-highlight-tag">碰撞检测</li>
+          <li class="entry-highlight-tag">双向绑定</li>
+        </ul>
+      </article>
+
+
+      <article class="entry">
+        <header class="entry-header">
+          <h3 class="entry-name">ERP 系统</h3>
+          <time class="entry-date">2020.08 - 2021.09</time>
+        </header>
+        <div class="entry-sub">杭州巨玩科技有限公司 · 供应链全流程数字化</div>
+        <ul class="entry-desc">
+          <li>担任前端主程，主导系统架构设计、开发规范制定及公共模块建设。</li>
+          <li>设计并实现 SPU/SKU 商品管理体系，支持多规格组合自动生成 SKU。</li>
+          <li>基于规格笛卡尔组合实现 SKU 自动生成，并维护规格与 SKU 数据映射关系。</li>
+          <li>支持 SKU 批量修改价格、库存、图片关联、编码生成、启用/禁用等业务能力。</li>
+          <li>封装产品编辑公共组件，提高复杂业务模块复用性与维护效率。</li>
+        </ul>
+        <ul class="entry-highlights">
+          <li class="entry-highlight-tag">SPU/SKU</li>
+          <li class="entry-highlight-tag">笛卡尔组合</li>
+          <li class="entry-highlight-tag">公共组件</li>
+        </ul>
+      </article>
+    </section>
+
+    <!-- ====== Education ====== -->
+    <section class="section">
+      <h2 class="section-title">教育背景</h2>
+      <article class="entry">
+        <div class="edu-row">
+          <h3 class="edu-school">华南师范大学</h3>
+          <span class="edu-major">计算机应用技术 · 大专（非全日制）</span>
+          <span class="edu-date">2017.09 - 2020.06</span>
+        </div>
+      </article>
+    </section>
+
+    <!-- ====== Portfolio ====== -->
+    <section class="section">
+      <h2 class="section-title">个人作品</h2>
+      <ul class="portfolio-items">
+        <li class="portfolio-item">
+          <span class="icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+          </span>
+          <a href="https://github.com/Sunday9787/online-demo" target="_blank">自定义模板编辑器</a>
+          <span class="portfolio-desc">— 基于 Schema 驱动的可视化拖拽编辑器</span>
+          <span class="portfolio-url"><a href="https://github.com/Sunday9787/online-demo" target="_blank">https://github.com/Sunday9787/online-demo</a></span>
+        </li>
+        <li class="portfolio-item">
+          <span class="icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+          </span>
+          <a href="https://github.com/Sunday9787/word-search" target="_blank">Node 爬虫</a>
+          <span class="portfolio-desc">— Node.js 爬虫工具</span>
+          <span class="portfolio-url"><a href="https://github.com/Sunday9787/word-search" target="_blank">https://github.com/Sunday9787/word-search</a></span>
+        </li>
+        <li class="portfolio-item">
+          <span class="icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+          </span>
+          <a href="https://www.npmjs.com/package/@sunday9787/log" target="_blank">@sunday9787/log</a>
+          <span class="portfolio-desc">— npm 模块：简易美化 log 日志输出，提供预置样式</span>
+          <span class="portfolio-url"><a href="https://www.npmjs.com/package/@sunday9787/log" target="_blank">https://www.npmjs.com/package/@sunday9787/log</a></span>
+        </li>
+        <li class="portfolio-item">
+          <span class="icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+          </span>
+          <a href="https://sunday90.com/log/javascript/word-puzzle.html" target="_blank">填字游戏 Canvas 版</a>
+          <span class="portfolio-desc">— 基于 PixiJS 2D Canvas 重写的填字游戏</span>
+          <span class="portfolio-url"><a href="https://sunday90.com/log/javascript/word-puzzle.html" target="_blank">https://sunday90.com/log/javascript/word-puzzle.html</a></span>
+        </li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>
