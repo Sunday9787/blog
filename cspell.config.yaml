@@ -4,8 +4,10 @@ dictionaryDefinitions: []
 dictionaries: []
 words:
   - aliyun
+  - Axios
   - bilkent
   - braintree
+  - Commitizen
   - cose
   - cytoscape
   - giscus
@@ -13,6 +15,8 @@ words:
   - llmstxt
   - markline
   - peaceiris
+  - Rollup
+  - Rsbuild
   - teek
   - vitepress-theme-teek
 ignoreWords: []

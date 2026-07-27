@@ -56,7 +56,7 @@
     }
     .header-left { flex: 1; min-width: 0; }
     .header-avatar {
-      width: 88px; height: 88px; border-radius: 50%;
+      width: 100px; height: 100px; border-radius: 50%;
       border: 3px solid var(--color-header-avatar-border);
       flex-shrink: 0; overflow: hidden; margin-top: 4px;
     }
@@ -185,7 +185,7 @@
       body { padding: 0; }
       .resume { border-radius: 0; box-shadow: none; }
       .header { padding: 28px 20px 24px; gap: 16px; }
-      .header-avatar { width: 72px; height: 72px; align-self: flex-start; }
+      .header-avatar { width: 80px; height: 80px; align-self: flex-start; }
       .header h1 { font-size: 24px; }
       .section { padding: 20px; }
       .entry-header { flex-direction: column; align-items: flex-start; }
@@ -532,7 +532,8 @@
           date: '2026.01 - 至今',
           descriptions: [
             '主导项目整体架构设计，基于 Vue3 + TypeScript + class-transformer 构建 Entity + Service 分层架构，统一业务模型、数据访问与状态管理，实现视图与业务逻辑解耦，提升了项目可维护性。',
-            '设计并实现页面与数据权限体系，统一权限模型覆盖全部后台业务，减少权限相关重复开发。',
+            '设计并实现完整的前端权限体系：基于 Descriptor 驱动数据权限，通过权限描述符声明各业务字段枚举级别的数据可见范围，按页面维度动态过滤下拉筛选选项；基于 AppAccess 组件实现按钮级权限，通过权限码控制页面 UI 元素显隐，双层覆盖后台全业务场景。',
+            '封装基于腾讯地图的 AppMapPicker 地图选点与 AppMapViewer 地图展示组件，支持关键词搜索、周边热点探索、经纬度拾取与反向地理编码等能力，满足门店选址等业务场景需求。',
             '封装十余个公共组件及通用 Hooks，减少重复开发，提升新页面开发效率约 40%。',
             '基于 Rsbuild 搭建前端工程，集成自动导入与 ESLint/Stylelint/Commitizen 等研发规范，降低团队协作成本，提升开发体验。',
             '设计并实现版本升级提示模块，通过比对新旧 Commit Hash 判断版本变化，引导用户刷新获取最新资源，确保功能及时更新。'
@@ -560,10 +561,9 @@
           descriptions: [
             '独立完成系统整体架构设计，包括前后端技术选型、模块划分、数据库设计及接口规范制定。',
             '基于 NestJS 搭建后端服务架构，封装通用 CRUD 与业务模块解耦设计。',
-            '引入 Redis 实现缓存机制与基础接口限流策略，提升高频接口访问性能与系统稳定性。',
-            '设计 MySQL 表结构与索引优化方案，针对列表查询与筛选场景进行性能优化。',
+            '基于 Redis 实现相同请求参数的接口响应缓存以及用户 Token 缓存。',
+            '基于 TypeORM 设计数据表实体与关系映射，完成列表查询与筛选接口开发。',
             '集成阿里云 OSS，实现图片/文件上传、CDN 分发与资源管理。',
-            '完成完整鉴权体系设计（JWT + 权限控制），支持后台用户角色与权限管理。',
             '前端基于 Nuxt3 实现 SSR 架构优化 SEO 表现，使用 TailwindCSS 进行组件级样式开发。',
             '完成项目部署与运维，基于 Nginx + PM2 实现服务代理、进程守护与线上稳定运行。'
           ],
@@ -592,9 +592,8 @@
           descriptions: [
             '担任前端主程，主导系统架构设计、开发规范制定及公共模块建设。',
             '设计并实现 SPU/SKU 商品管理体系，支持多规格组合自动生成 SKU。',
-            '基于规格笛卡尔组合实现 SKU 自动生成，并维护规格与 SKU 数据映射关系。',
-            '支持 SKU 批量修改价格、库存、图片关联、编码生成、启用/禁用等业务能力。',
-            '封装产品编辑公共组件，提高复杂业务模块复用性与维护效率。'
+            '负责权限模块设计与开发，支持按钮级细粒度权限控制。',
+            '负责公共组件开发，例如上传组件、Page 分页查询函数等。'
           ],
           highlights: ['SPU/SKU', '笛卡尔组合', '公共组件']
         }
