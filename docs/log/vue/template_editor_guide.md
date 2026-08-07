@@ -1,7 +1,6 @@
 ---
 title: 模板编辑器：架构
 date: 2024-10-27 16:00:03
-sticky: 1
 top: true
 categories: [Vue]
 description: 实现一个模板编辑器

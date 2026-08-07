@@ -1,7 +1,6 @@
 ---
 title: 记一次 pnpm 版本翻车现场：流水线好好的怎么突然就崩了？
 date: 2026-05-26 10:00:00
-sticky: 4
 top: true
 tags: [pnpm, CI/CD, 阿里云]
 categories: [devops]

@@ -1,7 +1,6 @@
 ---
 title: 虚拟列表
 date: 2025-1-22 15:15:00
-sticky: 5
 top: true
 categories: [Vue]
 description: Vue 虚拟列表实现方案

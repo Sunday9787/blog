@@ -1,7 +1,6 @@
 ---
 title: 中后台管理系统权限应该怎样设计
 date: 2023-12-20
-sticky: 2
 top: true
 categories: [Vue]
 tags: [权限, 中后台]

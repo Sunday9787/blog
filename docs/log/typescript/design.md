@@ -1,7 +1,6 @@
 ---
 title: 我是这样写TS的
 date: 2024-10-8 11:30:00
-sticky: 3
 top: true
 categories: [Typescript]
 tags: [Typescript, Vue]
