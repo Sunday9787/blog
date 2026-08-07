@@ -172,6 +172,7 @@ export default defineConfig({
           collapsed: true,
           items: [
             { text: 'Demo Preview', link: '/log/vue/demo-preview' },
+            { text: '数据权限模块设计', link: '/log/vue/data-permission' },
             { text: 'Element Form', link: '/log/vue/element-form' },
             { text: '权限管理', link: '/log/vue/permission' },
             { text: '模板编辑器', link: '/log/vue/template_editor' },
