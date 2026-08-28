@@ -174,6 +174,10 @@ export default defineConfig({
             { text: 'Demo Preview', link: '/log/vue/demo-preview' },
             { text: '数据权限模块设计', link: '/log/vue/data-permission' },
             { text: 'Element Form', link: '/log/vue/element-form' },
+            {
+              text: 'antd DatePicker 面板英文排查',
+              link: '/log/vue/antd-datepicker-dayjs-duplicate-instance'
+            },
             { text: '权限管理', link: '/log/vue/permission' },
             { text: '模板编辑器', link: '/log/vue/template_editor' },
             { text: '模板编辑器区域', link: '/log/vue/template_editor_area' },
