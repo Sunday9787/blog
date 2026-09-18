@@ -173,6 +173,7 @@ export default defineConfig({
           items: [
             { text: 'Demo Preview', link: '/log/vue/demo-preview' },
             { text: '数据权限模块设计', link: '/log/vue/data-permission' },
+            { text: '从依赖收集看按钮响应式', link: '/log/vue/dependency-tracking-reactivity' },
             { text: 'Element Form', link: '/log/vue/element-form' },
             {
               text: 'antd DatePicker 面板英文排查',
