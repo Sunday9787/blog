@@ -9,10 +9,6 @@ tags: [Vue, TypeScript, Pinia, 权限, 设计模式]
 
 如何在前端优雅地实现精细化数据权限控制
 
-<!-- more -->
-
----
-
 ## 背景
 
 在 B 端运营管理系统中，数据权限是一个绕不开的核心需求。不同角色、不同部门的用户，应该只能看到自己权限范围内的数据。比如：
@@ -102,7 +98,7 @@ export const scopeConfig = new Map<ScopeRuleType, ScopeRuleConfig>([
 ])
 ```
 
-注意 `value` 是可选的：城市这类**枚举型**规则有固定选项；创建时间、订单位置这类**非枚举型**规则没有固定选项（用户要填日期范围、选省市区），所以 `value` 不配置。Descriptor 只服务于枚举型规则。
+注意 `value` 是可选的：城市这类**枚举型**规则有固定选项；创建时间、订单位置这类**非枚举型**规则没有固定选项（用户要填日期范围、选省市区），所以 `value` 不配置。只有枚举型规则才谈得上"选项"，所以 Descriptor 只服务于枚举型规则——而且即便同为枚举型，也只有需要前端参与判断的维度才值得接入（见后文「前端的能力边界：只管选项过滤」）。
 
 ### 1.3 描述符：把配置和权限绑在一起的封装
 
@@ -243,7 +239,7 @@ export class ScopeRuleEntity extends AbstractEntity {
   /** 规则具体值：如城市 [3]（上海） */
   @Expose()
   @Transform(...)  // 复杂转换逻辑，见下文
-  ruleValue: number[] | ScopeRuleTimeDimensionEntity | ScopeRuleLocationEntity
+  ruleValue: number | number[] | ScopeRuleTimeDimensionEntity | ScopeRuleLocationEntity
 
   /** 从 scopeConfig 里取该规则的配置，供 UI 渲染 */
   get config() {
@@ -254,22 +250,81 @@ export class ScopeRuleEntity extends AbstractEntity {
 
 ### 复杂的数据转换
 
-服务端存储的数据格式和前端展示格式往往不一致。比如时间范围字段：
+服务端存储的是 JSON 字符串，前端组件需要的是对象和数组。这中间的"翻译"工作，全部由 `@Transform` 装饰器完成。class-transformer 会在三个方向上触发转换，`params.type` 就是当前的方向：
 
-- 后端存的是 `{ startTime: '2024-01-01', endTime: '2024-12-31' }` 的 JSON 字符串
-- 前端需要的是 `[dayjs('2024-01-01'), dayjs('2024-12-31')]` 的日期范围数组
+| `TransformationType` | 触发时机        | 要解决的问题                       |
+| -------------------- | --------------- | ---------------------------------- |
+| `PLAIN_TO_CLASS`     | 接口响应 → 实体 | JSON 字符串 → 数组 / 子实体实例    |
+| `CLASS_TO_PLAIN`     | 实体 → 请求体   | 数组 / 子实体 → JSON 字符串        |
+| `CLASS_TO_CLASS`     | 实体 → 实体     | 拷贝值，避免多个实体共享同一份引用 |
 
-我们用装饰器来处理这种转换：
+#### 第一层：按规则类型分发
+
+`ruleValue` 的类型是不确定的（数组、时间范围、省市区），所以它上面的 `@Transform` 先做一次分发：根据 `fieldName` 判断这条规则属于哪一组，再交给对应的转换器处理。
+
+```typescript
+  @Transform(function (param) {
+    // NOTE: 时间维度规则 则 初始化为 ScopeRuleTimeDimensionEntity 实例
+    if (ScopeRuleEntity.isTimeDimensionGroup(param.obj)) {
+      return ScopeRuleTimeDimensionEntity.transform(param)
+    } else if (ScopeRuleEntity.isLocationGroup(param.obj)) {
+      return ScopeRuleLocationEntity.transform(param)
+    } else if (ScopeRuleEntity.isComplianceGroup(param.obj)) {
+      return ScopeRuleEntity.transformComplianceGroup(param)
+    } else {
+      // 枚举型规则：JSON 字符串 ⇄ 数组
+      switch (param.type) {
+        case TransformationType.CLASS_TO_PLAIN:
+          return JSON.stringify(param.value)
+        case TransformationType.PLAIN_TO_CLASS:
+          return safeParseJSON(param.value)
+        default:
+          return clone(param.value)
+      }
+    }
+  })
+  @Expose()
+  ruleValue: number | number[] | ScopeRuleTimeDimensionEntity | ScopeRuleLocationEntity
+```
+
+枚举型规则的转换最简单，就是 `JSON.stringify` 与 `safeParseJSON` 的互转；复杂的是时间维度、地理位置、合规完成度这三种，它们各自实现一个 `static transform`。
+
+#### 第二层：各类型自己的 transform
+
+以时间维度为例。后端存的是 `{ startTime: '2024-01-01', endTime: '2024-12-31' }` 这样的 JSON 字符串，而 RangePicker 需要的是 `[dayjs, dayjs]` 数组：
 
 ```typescript
 export class ScopeRuleTimeDimensionEntity extends ScopeRuleBaseValueEntity {
-  @Expose() private startTime?: string
-  @Expose() private endTime?: string
+  static transform(params: TransformFnParams) {
+    switch (params.type) {
+      case TransformationType.PLAIN_TO_CLASS:
+        const json = safeParseJSON(params.value)
+        const instance = plainToInstance(ScopeRuleTimeDimensionEntity, json)
+
+        // 解析出有效范围 → 顺手把勾选状态置为 true
+        if (instance.dateRange) {
+          instance.checked = true
+        }
+
+        return instance
+      case TransformationType.CLASS_TO_PLAIN:
+        return JSON.stringify((params.value as ScopeRuleTimeDimensionEntity).toJSON())
+      case TransformationType.CLASS_TO_CLASS:
+        return (params.value as ScopeRuleTimeDimensionEntity).copy()
+    }
+  }
+
+  @Expose()
+  private startTime?: string
+
+  @Expose()
+  private endTime?: string
 
   get dateRange() {
     if (this.startTime && this.endTime) {
       return [dayjs(this.startTime), dayjs(this.endTime)]
     }
+    return void 0
   }
   set dateRange(val: [dayjs.Dayjs, dayjs.Dayjs] | undefined) {
     this.startTime = val && val[0].startOf('day').format(DATE.valueFormat)
@@ -278,7 +333,61 @@ export class ScopeRuleTimeDimensionEntity extends ScopeRuleBaseValueEntity {
 }
 ```
 
-`ruleValue` 上的 `@Transform` 会根据 `fieldName` 的类型走不同的转换分支：时间维度 → `ScopeRuleTimeDimensionEntity`，地理位置 → `ScopeRuleLocationEntity`，布尔状态 → 数组包装，枚举型 → JSON 字符串与数组互转。
+这里有两个细节值得单独拎出来说：
+
+- **存储格式与展示格式解耦**：接口和数据库里只有 `startTime` / `endTime` 两个字符串，组件直接用的却是 `dateRange` 这个 `[dayjs, dayjs]` 数组。getter / setter 就是这座桥——setter 在赋值时顺手做了 `startOf('day')` / `endOf('day')` 边界归一，组件不用关心日期边界怎么算。
+- **UI 状态由数据推导，而不是另外维护**：`PLAIN_TO_CLASS` 阶段只要解析出有效的 `dateRange`，就把 `checked = true`（`checked` 定义在基类 `ScopeRuleBaseValueEntity` 上）。这样配置页的勾选框不需要额外存一份状态，勾选状态永远和真实数据一致，不会出现"勾上了但没值"或"有值却没勾"的脏状态。
+
+地理位置的转换结构与之完全对称，区别只有两处：判空条件换成 `provinceCode || cityCode`，并用自定义装饰器 `@NumberAsString()` 处理行政区划码在数字与字符串之间的互通：
+
+```typescript
+export class ScopeRuleLocationEntity extends ScopeRuleBaseValueEntity {
+  static transform(params: TransformFnParams) {
+    switch (params.type) {
+      case TransformationType.PLAIN_TO_CLASS:
+        const json = safeParseJSON(params.value)
+        const instance = plainToInstance(ScopeRuleLocationEntity, json)
+
+        if (instance.provinceCode || instance.cityCode) {
+          instance.checked = true
+        }
+
+        return instance
+      // CLASS_TO_PLAIN → JSON.stringify(...toJSON())
+      // CLASS_TO_CLASS → copy()
+    }
+  }
+
+  @NumberAsString()
+  @Expose()
+  provinceCode?: number
+
+  @NumberAsString()
+  @Expose()
+  cityCode?: number
+}
+```
+
+合规完成度（签约、认证状态）这类规则更特殊：它虽然是一个布尔值，但后端统一按数组存放，所以转换时要"包装 / 解包"一次：
+
+```typescript
+static transformComplianceGroup(params: TransformFnParams) {
+  switch (params.type) {
+    case TransformationType.PLAIN_TO_CLASS:
+      const json = safeParseJSON(params.value) || []
+      return json[0] // 解包：前端实体只关心第一个元素
+    case TransformationType.CLASS_TO_PLAIN:
+      const value = params.value !== void 0 ? [params.value] : []
+      return JSON.stringify(value) // 包装：统一还原成数组再提交
+    case TransformationType.CLASS_TO_CLASS:
+      return clone(params.value)
+  }
+}
+```
+
+把这套转换串起来看：**`@Transform` 负责"分发给谁"，各类型的 `static transform` 负责"怎么变"，`TransformationType` 保证双向可逆**。最终效果是——接口拿到的 JSON 字符串，进实体就变成有 `dateRange`、有 `checked` 的对象；实体提交时又原样还原成后端的存储格式。业务代码和组件只面对实体，永远不用手写 `JSON.parse` / `JSON.stringify`。
+
+顺便一提，同样是"按 `fieldName` 分组"这个判断，`isTimeDimensionGroup` / `isLocationGroup` 这类静态方法被转换、`normalizeGroup` 分组、`create` 初始化三处复用。分组语义只定义一次，避免了在多个 `switch` 里重复罗列枚举值。
 
 ### 核心合并逻辑
 
@@ -287,7 +396,7 @@ export class ScopeRuleTimeDimensionEntity extends ScopeRuleBaseValueEntity {
 **规则值合并**（`ScopeRuleEntity.mergeScopeRules`）——把多条模板按 `fieldName` 聚合：
 
 1. 过滤：指定页面生效但 `pageScope` 为空的模板直接剔除（该模板不生效）；
-2. 只处理枚举型规则（城市 / 区域）；
+2. 只处理枚举型规则（城市 / 区域）：时间、位置这类范围型规则前端判断不了，合并时直接跳过，交由后端执行；
 3. 按 `fieldName` 合并取值，优先级如下：
    - 已有规则是全部权限（`ruleValue` 为空数组）→ 不再合并，全部权限保留；
    - 当前规则是全部权限 → 结果直接置为全部权限；
@@ -341,29 +450,54 @@ getters: {
 export function useScope() {
   const userModule = useUserModule()
 
+  /**
+   * 检查是否有数据权限
+   *
+   * - 全部页面配置范围（pageConfigSet 为空）：直接校验数据权限值
+   * - 指定页面配置范围：需同时校验页面配置和数据权限值
+   * - 未绑定规则或规则值为空时默认有权限
+   */
   const hasScope = function (scope: ScopeRuleType, page: string, value: number) {
     const rule = userModule.scopeRuleMap.get(scope)
 
     // NOTE: 不存在规则，默认有权限
-    if (!rule) return true
-    if (!Array.isArray(rule.ruleValue)) return false
-    // NOTE: 空数组 = 全部权限
-    if (!rule.ruleValue.length) return true
+    if (!rule) {
+      return true
+    }
 
-    // NOTE: 全页面生效（pageConfigSet 为空）：直接校验数据权限值
+    if (!Array.isArray(rule.ruleValue)) {
+      return false
+    }
+
+    // NOTE: 不存在规则值，默认有权限
+    if (!rule.ruleValue.length) {
+      return true
+    }
+
+    // NOTE: 全部页面配置范围：直接校验数据权限值
     if (!userModule.pageConfigSet.size) {
       return rule.ruleValue.includes(value)
     }
 
-    // NOTE: 指定页面生效：需同时具备页面配置和数据权限值
-    return userModule.pageConfigSet.has(page) && rule.ruleValue.includes(value)
+    // NOTE: 指定页面配置范围: 选定的页面校验，数据权限值校验，未选定的页面默认不校验，默认有权限
+    if (userModule.pageConfigSet.has(page)) {
+      return rule.ruleValue.includes(value)
+    }
+
+    return true
   }
 
   return { hasScope }
 }
 ```
 
-这里有几个"默认有权限"的兜底逻辑，我们称之为**白名单模式**：只有明确配置了限制，才做校验。新功能上线时即使忘记配置权限，也不会导致功能不可用。
+这里有三处"默认有权限"的兜底，我们称之为**白名单模式**：只有"规则存在 + 规则值存在 + 页面命中"三个条件同时满足时才真正做值校验，其余情况一律放行。
+
+- **未绑定该规则**：这个维度根本没有配置限制，直接通过；
+- **规则值不存在**：`ruleValue` 为空数组，表示全部权限，直接通过；
+- **页面不在生效范围**：规则存在且有值，但当前页面没被配置进 `pageConfigSet`，说明这条规则不约束该页面，同样放行。
+
+新功能上线时即使忘记配置权限，也不会导致功能不可用。
 
 校验路径可以走两条：
 
@@ -428,10 +562,11 @@ App.vue 启动
   └─> cityDescriptor.options(ScopePage.OrderList)
         └─> 遍历全部选项，逐个 Dictionary.hasScope('city', 'order_list', value)
               └─> useScope().hasScope(...)
-                    ├─ 该规则无配置       → 通过（白名单）
-                    ├─ 规则值为空数组    → 通过（全部权限）
-                    ├─ 全页面生效        → 值命中即通过
-                    └─ 指定页面生效      → 页面命中 && 值命中
+                    ├─ 该规则无配置          → 通过（白名单）
+                    ├─ 规则值不存在          → 通过（全部权限）
+                    ├─ pageConfigSet 为空    → 值命中即通过（全部页面范围）
+                    ├─ 页面命中配置范围      → 值命中即通过
+                    └─ 页面不在配置范围      → 通过（该规则不约束此页面）
   └─> 下拉框只保留通过的选项（如"上海"）
 
 用户查询
@@ -457,6 +592,21 @@ App.vue 启动
 ### 为什么选项过滤放在渲染时，而不是提交时？
 
 如果只在提交时校验，用户先看到无权选项、提交后才被拦截，体验差且泄露了规则结构。**渲染时过滤**让无权选项从视觉上就不存在，用户既不会误选，也无从猜测。付出的代价是每次渲染都要走一遍 `hasScope`，但因为规则合并结果在 getter 里缓存、选项数量又很有限，性能完全不是问题。
+
+### 前端的能力边界：只管选项过滤
+
+前面几节都在讲"过滤"，但有一条边界必须先划清楚：**前端只负责过滤"有选项"的维度，范围类规则全权交给后端。**
+
+按这个标准，规则分两类：
+
+- **枚举型**（城市、区域、会员状态……）：候选值是一张固定的表，前端知道"全部选项有哪些"，也就能算出"当前用户能用哪些"，于是可以在渲染时把无权选项摘掉。这类规则前端参与判断。
+- **范围型**（时间区间、地理位置……）：它们没有固定选项，用户填的是日期范围、省市区，前端根本无从判断"某条数据在不在这个范围内"，选项过滤也就无从谈起。这类规则只是随模板一起下发，由后端在查询时执行。
+
+所以 `mergeScopeRules` 合并时只处理枚举型规则，范围型规则直接跳过——不是它们不重要，而是前端对它们无能为力。反过来说，筛选下拉框、单选按钮这类 UI 天生只服务于枚举型维度，正好和 Descriptor 的能力范围重合。
+
+这条边界还有一个推论：**前端这套机制是体验优化，不是安全边界**。它保证的是"用户看不到无权选项，也就不会误提交"，但真正的数据裁剪必须落在后端查询层——否则用户绕过页面直接调接口，前端过滤就形同虚设。同理，"未配置即放行"的默认在白名单语义下是合理的：前端的职责是"把不该出现的选项藏起来"，而不是"兜住所有越权访问"，最后那道闸门始终在后端。
+
+也正因为这条边界被写死在合并逻辑里，新增一个前端可判定的维度时，必须同时接入三处——`scopeConfig` 里的选项、Descriptor 单例、合并逻辑的白名单。**三者不同步的后果是静默失效**：配置页能配、能保存，前端却永远放行，看起来一切正常。
 
 ## 总结
 
